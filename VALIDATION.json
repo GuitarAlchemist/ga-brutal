@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-21T02:32:29.783815+00:00",
+  "sdk": "10.0.113",
+  "source_commit": "1c5781daed923ffc3104296554bbe956a16d3758",
+  "checks": [
+    {
+      "project": "HelloBrutal",
+      "locked_restore": "passed",
+      "build": "passed",
+      "warnings": 0,
+      "errors": 0,
+      "restore_log_sha256": "02cfeef3f5f8da53f8473d265033b0042417e4eae25c5754ce08efe4c0dc60b5",
+      "build_log_sha256": "41009c91088fdd663152c9a63f69c799b9e5d9e3854c1ac3b0fc144a9e0cbb28"
+    },
+    {
+      "project": "HallSlice",
+      "locked_restore": "passed",
+      "build": "passed",
+      "warnings": 0,
+      "errors": 0,
+      "restore_log_sha256": "4260e6f8cb3a0ef124771c79a89d81b05e34f7ad6728eaddc30cc0fab19f9e9b",
+      "build_log_sha256": "bb5cbe0553c9ab0891b4c58aefdab48654d334438e85f4c83e26ff61fcd457c6"
+    },
+    {
+      "project": "Colossus",
+      "locked_restore": "passed",
+      "build": "passed",
+      "warnings": 0,
+      "errors": 0,
+      "restore_log_sha256": "b3977e622a6b5767435f03e6467f772a5d12b5f31ad9d5124f04351c45fb90cd",
+      "build_log_sha256": "92b8d6a57412fe6c81ef55b753daeaa3e98bd58c43bd3fc63f5bb0c52cc49dc6"
+    },
+    {
+      "project": "Tour",
+      "locked_restore": "passed",
+      "build": "passed",
+      "warnings": 2,
+      "errors": 0,
+      "restore_log_sha256": "dfac8edda6e6fcccad239f1ba17ffe611ac8eaf3379d07d20bf9191b503c9a90",
+      "build_log_sha256": "473bb761dea6766c9dcf7b5731b72918ab7d18e4b0cf1d1fcf98116a00453d75"
+    }
+  ],
+  "gpu_or_runtime_executed": false,
+  "engines_or_models_downloaded": false,
+  "secret_scan": "patterns checked by scripts/verify_snapshot.py; not a guarantee against every possible secret",
+  "memory_before_validation": {
+    "available_mb": 28467,
+    "committed_gib": 93.98,
+    "commit_headroom_gib": 33.43
+  }
+}

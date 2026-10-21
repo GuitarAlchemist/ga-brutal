@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.png binary
+LICENSES/** -text -whitespace
+LICENSE -text -whitespace
+NOTICE.txt -text -whitespace

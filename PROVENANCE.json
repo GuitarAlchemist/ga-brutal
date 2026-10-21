@@ -1,0 +1,598 @@
+{
+  "source_repository": "https://github.com/GuitarAlchemist/ga",
+  "source_pull_request": "https://github.com/GuitarAlchemist/ga/pull/839",
+  "source_commit": "1c5781daed923ffc3104296554bbe956a16d3758",
+  "source_subtree": "Experiments/Brutal/",
+  "source_tree": "ddef33b2dd3f9d9a934c1e89fac73163e8789bac",
+  "coordination_epic": "https://github.com/GuitarAlchemist/gaia/issues/257",
+  "brutal_licence_revision": "a25cdf80b2a15530e7da6cff744def9d841ad3c3",
+  "owner_session": "fe20417b-cfad-44ec-ac12-db95df2277a6",
+  "owner_acknowledgement": "Not requested or received. No source checkout files were changed.",
+  "snapshot_method": "Read immutable git blobs; never copy the mutable working tree.",
+  "files": [
+    {
+      "path": "Experiments/Brutal/Colossus/.gitignore",
+      "git_blob": "cbbd0b5c02f84ce214853810494ebba8ff67c7f5",
+      "sha256": "d4a12a536055dfa486d2615a73ec457957de1e0707face982dfc8830eecce59b",
+      "bytes": 9,
+      "included": true,
+      "extracted_sha256": "d4a12a536055dfa486d2615a73ec457957de1e0707face982dfc8830eecce59b",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/Colossus.csproj",
+      "git_blob": "e8831266321598c1531d24b6db0597d5a059515a",
+      "sha256": "beb4b789ee97982a1b329dcf690ff579bc90178c8a21117aeae6a9a42fb980fb",
+      "bytes": 2364,
+      "included": true,
+      "extracted_sha256": "3593e9631b96561a03a7417579d6b4b096a53e76005976af896ef983a57f8678",
+      "modified_for_extraction": true
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/Program.cs",
+      "git_blob": "e876069f0b20345d6017b45689e53ad0411d2aa6",
+      "sha256": "5b814e494da802ad3bc7fe1feb993d64225a811408f7615909859b5f839e7170",
+      "bytes": 181613,
+      "included": true,
+      "extracted_sha256": "626fa2699645d8344f189d7c2664d9ec8494f49f458077102ab08bc282bdf19e",
+      "modified_for_extraction": true
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/Sound.cs",
+      "git_blob": "b30583e037f39f13a4d888acd3be0666a45db410",
+      "sha256": "9e46741972c993c05f907a3f7b9106891d4c655154f2e29f70780f788c0460e3",
+      "bytes": 22377,
+      "included": true,
+      "extracted_sha256": "9e46741972c993c05f907a3f7b9106891d4c655154f2e29f70780f788c0460e3",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/Speech.cs",
+      "git_blob": "998ce0ab562158e4d7766004d8248e85450da63a",
+      "sha256": "d709e0a12ebb251ebde4191c89d4f23a81831a9ad820534dda463aa6a437e83b",
+      "bytes": 5569,
+      "included": true,
+      "extracted_sha256": "2e465c81ae1014f8665f17c18adbf2bd96658c73579a686855fcc4aefe1455f0",
+      "modified_for_extraction": true
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/city/build_towers.py",
+      "git_blob": "074f71a2bc77a8d9f249f16b91d31cdb97cd51d8",
+      "sha256": "517a369bf397965221625b2d0c021561f00ed5c01f7d4a69095bde4b8a017242",
+      "bytes": 9172,
+      "included": true,
+      "extracted_sha256": "517a369bf397965221625b2d0c021561f00ed5c01f7d4a69095bde4b8a017242",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/city/towers.glb",
+      "git_blob": "4272099bc34d282b68a8832456ea20bce4ce404b",
+      "sha256": "50ed97ca25a36459c70480f1b092c085d0a7b8dd0ec5fd1f21f5ba66f82f335b",
+      "bytes": 1017920,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/head/bake_blender.py",
+      "git_blob": "b3a79f77108108447deaa72dc4aa99041a93d01a",
+      "sha256": "87bdf02e8cd6d48efe9503f9207fb42a7f02edd2c61c9d9453d149afa93340db",
+      "bytes": 6067,
+      "included": true,
+      "extracted_sha256": "87bdf02e8cd6d48efe9503f9207fb42a7f02edd2c61c9d9453d149afa93340db",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/head/generate_comfyui.py",
+      "git_blob": "07bdab20603c2563044fcba4ce7677e591a41668",
+      "sha256": "3600f361ed83b9943f4d7562fdf80d5c50114d584a7d03b6aea8f29f8432877f",
+      "bytes": 4912,
+      "included": true,
+      "extracted_sha256": "3600f361ed83b9943f4d7562fdf80d5c50114d584a7d03b6aea8f29f8432877f",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/head/head_points.bin",
+      "git_blob": "015e78199267630e8221845b5a4263112fd43c02",
+      "sha256": "5082dbe02ff74e39b22498df944df5f23f8b4171d6d8513ae49fbbe9462b02c9",
+      "bytes": 720008,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/packages.lock.json",
+      "git_blob": "94994c31b9431b2736e8c110ddf00818d94287d2",
+      "sha256": "9651cad699c28f07a8a2356e99490380c3dfe10a3c899f2f89b4bf69629b43c7",
+      "bytes": 17086,
+      "included": true,
+      "extracted_sha256": "9651cad699c28f07a8a2356e99490380c3dfe10a3c899f2f89b4bf69629b43c7",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/bake_blender.py",
+      "git_blob": "f3af2ac4adcbf4e9627bbeebfb06176ec5c1ac85",
+      "sha256": "891ef4b1b5f6370159ea11ce15192c3be53315e1e9cf298d52319eed45786742",
+      "bytes": 3384,
+      "included": true,
+      "extracted_sha256": "891ef4b1b5f6370159ea11ce15192c3be53315e1e9cf298d52319eed45786742",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/cladding_albedo.png",
+      "git_blob": "cdca3898ae98e894230c559bc25165c3f6de575f",
+      "sha256": "591511de1d675d4d17c506ac819fcea7d492872e5f0c72881a28146feeb066cf",
+      "bytes": 392103,
+      "included": true,
+      "extracted_sha256": "591511de1d675d4d17c506ac819fcea7d492872e5f0c72881a28146feeb066cf",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/cladding_nrh.png",
+      "git_blob": "df7c58dfc3fa11507937995a4c1a26a1eb902b08",
+      "sha256": "1cbe9747da165e5ed93111a63ab99bf799bc49f9329de2db4a572a3640fcfb4c",
+      "bytes": 480260,
+      "included": true,
+      "extracted_sha256": "1cbe9747da165e5ed93111a63ab99bf799bc49f9329de2db4a572a3640fcfb4c",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/concrete_albedo.png",
+      "git_blob": "b86e5556b953b849cc85d4a4dd6eb49bd5408219",
+      "sha256": "00022a202474dd51fdf12282755ca377f961ea92b45b5417f85a77380c9ec02c",
+      "bytes": 441714,
+      "included": true,
+      "extracted_sha256": "00022a202474dd51fdf12282755ca377f961ea92b45b5417f85a77380c9ec02c",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/concrete_nrh.png",
+      "git_blob": "04870e2c385ead3aadd31c65651a2a930b17b700",
+      "sha256": "d21fa32eec26fc459bad8219bcd2382b36dc9d29a715c89e66450f11d4853b0c",
+      "bytes": 706875,
+      "included": true,
+      "extracted_sha256": "d21fa32eec26fc459bad8219bcd2382b36dc9d29a715c89e66450f11d4853b0c",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/facade_albedo.png",
+      "git_blob": "5a206c1ab53b8ce87bc1cee942bcbce2667dd0d4",
+      "sha256": "cf8efb9d4eeae24ef00cbc5d0468041f990fe4a83526bfa9af7bc4e029130916",
+      "bytes": 490371,
+      "included": true,
+      "extracted_sha256": "cf8efb9d4eeae24ef00cbc5d0468041f990fe4a83526bfa9af7bc4e029130916",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/facade_nrh.png",
+      "git_blob": "5368feac7706336c2324af001054cc6a13bccee5",
+      "sha256": "ac660eada79b9827532babe4ea50372afe3d7d2082c1d4210dcc6a05bbc1171e",
+      "bytes": 665344,
+      "included": true,
+      "extracted_sha256": "ac660eada79b9827532babe4ea50372afe3d7d2082c1d4210dcc6a05bbc1171e",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/generate_comfyui.py",
+      "git_blob": "b32f75aaf4b2237d12c238c7eccfc3a7d52ffb02",
+      "sha256": "cd512c85a4f0526f734368143dd592760703460ee15ef3bd481cea5300d316cb",
+      "bytes": 2893,
+      "included": true,
+      "extracted_sha256": "cd512c85a4f0526f734368143dd592760703460ee15ef3bd481cea5300d316cb",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/hull_albedo.png",
+      "git_blob": "bbb38aed698c61f9d5405d46661a788b58fd0b53",
+      "sha256": "7e34fee87e035a8ff97ad9b20da03947cf358d3441e8fff1f567d9038e5088fc",
+      "bytes": 424122,
+      "included": true,
+      "extracted_sha256": "7e34fee87e035a8ff97ad9b20da03947cf358d3441e8fff1f567d9038e5088fc",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/hull_nrh.png",
+      "git_blob": "5d18b4478b64944cc002581b4ba4d197d0f432c9",
+      "sha256": "d48c2ed9a5b165f944eb0767fe929493e9b8121c3177b7d10f0b691c7fad53b3",
+      "bytes": 510077,
+      "included": true,
+      "extracted_sha256": "d48c2ed9a5b165f944eb0767fe929493e9b8121c3177b7d10f0b691c7fad53b3",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/README.md",
+      "git_blob": "1ed78f45192d788cfacd1ed6a4eff0ba929b277f",
+      "sha256": "a683c2dd619e61d58b8a7733603dd16a6695a1f4c3e08715b91ba285db6e916c",
+      "bytes": 1682,
+      "included": true,
+      "extracted_sha256": "a683c2dd619e61d58b8a7733603dd16a6695a1f4c3e08715b91ba285db6e916c",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/en/1.wav",
+      "git_blob": "0ac54eae287ba2b1ae48ec9747b8b5441dee8c5e",
+      "sha256": "fb90a0316b77ec645e08a2662a3595ed7827695ea448d6c586fc8a79602fa741",
+      "bytes": 186284,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/en/2.wav",
+      "git_blob": "fcf5a0e456f70df5ebdcba3913ea16a49533ed08",
+      "sha256": "2c4edee84e1d359ccc9c8af11016f72e31e3668dcccefefdc8bbbfe4659f7f8a",
+      "bytes": 347564,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/en/3.wav",
+      "git_blob": "d13c809219b20f78c1e76639273f5f71995862eb",
+      "sha256": "d6fd296e04eb66acd6f717616dcf4fa00755e6563e57cd77f60c511233bc69d6",
+      "bytes": 311084,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/en/4.wav",
+      "git_blob": "46c6e6b72fb234efbadf90be4860489dbe6c28e2",
+      "sha256": "3494935616ab2b4487ef9f8619161de6003be54a9a4bca4f5960ad60fe8e8672",
+      "bytes": 145964,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/en/5.wav",
+      "git_blob": "428664b37ffd4d04831168cdb8363269a32377be",
+      "sha256": "5942b763b1206ac79eadd0d39e9ea640a02405f836f16871142662c3a6492928",
+      "bytes": 199724,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/fr/1.wav",
+      "git_blob": "4bac5cb8669bc8f4b3dabef303add025c4edb43b",
+      "sha256": "adf4cb6e0d8624d97360c372a4cc629a77d902d6f59fe61ea935205354fde32d",
+      "bytes": 176684,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/fr/2.wav",
+      "git_blob": "965ac1f8e10f24ce6ed51316350346192fa7157e",
+      "sha256": "fc556cedb309d8b3ec21e81da5988e5aa874c2bcff62bd6f05035d7ae34db3f7",
+      "bytes": 391724,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/fr/3.wav",
+      "git_blob": "1f2da0e36d6f9e46516c7ecca373fbe382abd124",
+      "sha256": "3fa3ea8d21f1db8b562fe604537017fe2ec3610b2b4988793aa9a654bfdba9df",
+      "bytes": 268844,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/fr/4.wav",
+      "git_blob": "f92712a73c5181e463a80e32ccc4488c075b1a7f",
+      "sha256": "12cb6557b440c17dc57cb54fd2b8bf654d7023b1fb7a72ff8f113fc6e9591ff8",
+      "bytes": 184364,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/fr/5.wav",
+      "git_blob": "357838c472b0c2366d99e45be49b7c71005440c9",
+      "sha256": "1b1c45bc653817e9dbcb84451d9babd32d1fe234a53bd52d40bc8edaf8dbf5f9",
+      "bytes": 301484,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/lines.en.txt",
+      "git_blob": "8e847acd705ffbb93ff96600b727722d6d28fbbb",
+      "sha256": "4a12629e9f9f152a23b9bda1d97bbac2e29771b154da9a0ff8c36941479dc1a3",
+      "bytes": 572,
+      "included": true,
+      "extracted_sha256": "4a12629e9f9f152a23b9bda1d97bbac2e29771b154da9a0ff8c36941479dc1a3",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/lines.fr.txt",
+      "git_blob": "7a3a63fbf8b8cacd3d8e650ae96bfbfa6363077a",
+      "sha256": "df69a8fd3f79e98cb1091c2f4d5e0716a672c97c53fc0a138a3bd222a2fdc747",
+      "bytes": 498,
+      "included": true,
+      "extracted_sha256": "df69a8fd3f79e98cb1091c2f4d5e0716a672c97c53fc0a138a3bd222a2fdc747",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/voice/render.py",
+      "git_blob": "cf947638ede99b7c3aea326ce4170cc4d02b7a8f",
+      "sha256": "2d432e2a94167d66ffceef7ced4ff420f7253835552eeb301a5b9e3fdfa5f062",
+      "bytes": 1113,
+      "included": true,
+      "extracted_sha256": "2d432e2a94167d66ffceef7ced4ff420f7253835552eeb301a5b9e3fdfa5f062",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/HallSlice/HallSlice.csproj",
+      "git_blob": "5c950853dceb3eecb4712b00889d3300afe10be9",
+      "sha256": "0d91c6e4d1660d362d404046a84c1e67e19163e01d43546a8ddd2a2cc6327ec2",
+      "bytes": 1013,
+      "included": true,
+      "extracted_sha256": "0d91c6e4d1660d362d404046a84c1e67e19163e01d43546a8ddd2a2cc6327ec2",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/HallSlice/Program.cs",
+      "git_blob": "0d4b922cc19d879475aaefc70d608e76fe050b6c",
+      "sha256": "899fe9b8852fdeaf089c588660a65b2295c2be8222ccff321db63c7af2dc8e79",
+      "bytes": 32856,
+      "included": true,
+      "extracted_sha256": "899fe9b8852fdeaf089c588660a65b2295c2be8222ccff321db63c7af2dc8e79",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/HallSlice/packages.lock.json",
+      "git_blob": "25d0eb2a22d61a99eff5f77b1b0b30fff9a7ce42",
+      "sha256": "369c21d8356149743e4a52f4ca8f67e866290f485c7939a11aeca3ff5bce2d55",
+      "bytes": 10774,
+      "included": true,
+      "extracted_sha256": "369c21d8356149743e4a52f4ca8f67e866290f485c7939a11aeca3ff5bce2d55",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/HelloBrutal/HelloBrutal.csproj",
+      "git_blob": "1f66d6ba0962c7c78824761437a709779e6c26bd",
+      "sha256": "635f1ceb1421a73b61a3f96169020a9e39fb07622e9b8f54cd04e96a5f015f11",
+      "bytes": 697,
+      "included": true,
+      "extracted_sha256": "635f1ceb1421a73b61a3f96169020a9e39fb07622e9b8f54cd04e96a5f015f11",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/HelloBrutal/Program.cs",
+      "git_blob": "5d548966ec5d016e782f0f7e0062d90dfd5e3e28",
+      "sha256": "7128e52514bfc89dc9ead4bc39dd94757d98f4a40b456ba66b9267613b3b33f9",
+      "bytes": 1834,
+      "included": true,
+      "extracted_sha256": "7128e52514bfc89dc9ead4bc39dd94757d98f4a40b456ba66b9267613b3b33f9",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/HelloBrutal/packages.lock.json",
+      "git_blob": "d94f2ea16c755b3953902dc7d321149dc963828d",
+      "sha256": "332c82871333a35e9c7fb5926345ee8823df017a8347673b1c9fa1e85dffc56d",
+      "bytes": 8917,
+      "included": true,
+      "extracted_sha256": "332c82871333a35e9c7fb5926345ee8823df017a8347673b1c9fa1e85dffc56d",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/README.md",
+      "git_blob": "44dc6293dfadeb71c12024d37a86b65eb7f3644f",
+      "sha256": "7d49456084e45ff661941437fc932ca8f670f788c22afe44c763a2e7bb7d98f4",
+      "bytes": 48082,
+      "included": true,
+      "extracted_sha256": "7d49456084e45ff661941437fc932ca8f670f788c22afe44c763a2e7bb7d98f4",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Tour/Program.cs",
+      "git_blob": "ddf86570ad91da71eacaeb93e8b497672d1e07b9",
+      "sha256": "35934dff42489c96d024a6f9ebc6027880595af72fdc237b9f557bc209b2a000",
+      "bytes": 20947,
+      "included": true,
+      "extracted_sha256": "35934dff42489c96d024a6f9ebc6027880595af72fdc237b9f557bc209b2a000",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Tour/Tour.csproj",
+      "git_blob": "c71239629f5eaff0530f47a8725ff851b08a1466",
+      "sha256": "8bf5bd4032b0f4b46431723ba860111c007c84eeb0f36caeea4b6627da00d4c9",
+      "bytes": 4523,
+      "included": true,
+      "extracted_sha256": "8bf5bd4032b0f4b46431723ba860111c007c84eeb0f36caeea4b6627da00d4c9",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Tour/packages.lock.json",
+      "git_blob": "dce12fb64070fb22522e7254e92af1712120e5c8",
+      "sha256": "996c22c7be8952af9f3c3fbcace6f9d0a99756d5c4ad14f8b2207e8b0e7b1a2e",
+      "bytes": 27493,
+      "included": true,
+      "extracted_sha256": "996c22c7be8952af9f3c3fbcace6f9d0a99756d5c4ad14f8b2207e8b0e7b1a2e",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/evidence/colossus-20261020.png",
+      "git_blob": "bcb0fc78b0df43abe4a44278e5df4d3b1ed48335",
+      "sha256": "b4c633bb1d80a52ce86d8a7459850a2ea5f888f9ef4a5e960ee110d9940e9025",
+      "bytes": 1665030,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/colossus-city-20261020.png",
+      "git_blob": "0a945e09b886a1681ae5c7ec7b8e95b19c989bad",
+      "sha256": "2e3ee39a1ac3a169a529b546d552e93e4272fe423e9a351e105da3b8fbedbb7f",
+      "bytes": 1888037,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/colossus-head-20261020.png",
+      "git_blob": "3113aeef0e3980a7c0c49fbc79db76538b18b033",
+      "sha256": "520083b028df2f5e9a54dc78959b29584c31fd8ae978016b18b5d2c0fa906c05",
+      "bytes": 1855579,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/colossus-rtx-20261020.png",
+      "git_blob": "2bb1824ee0367808a0c93bdaba810cc32dad360c",
+      "sha256": "f56d26d9dd90bfa4dbd6404e1677891f5b7888ca3471590eee8814a639ae64c9",
+      "bytes": 1784223,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/colossus-textured-20261020.png",
+      "git_blob": "73d5a8fa487ba4bd41cc5ef3d61d936e46fefd6b",
+      "sha256": "dbbbc2da1914835a535a82c4853266dc568707f5b0ed7d675b782491af66eca5",
+      "bytes": 1886198,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/m1-20261019-233551.md",
+      "git_blob": "30f97ad99d3b72c896dcd33a5d976c233f12f30b",
+      "sha256": "2f7154c100d9ff27782ded6a4735daa4c23d6263ef0566901cb20ecdeb42d73b",
+      "bytes": 3334,
+      "included": true,
+      "extracted_sha256": "2f7154c100d9ff27782ded6a4735daa4c23d6263ef0566901cb20ecdeb42d73b",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/evidence/m1-20261019-233551.png",
+      "git_blob": "77ce033e680e7496b2ace3f34237604114547d68",
+      "sha256": "35e31ece5fc2a66f57ec1c192e82b4d275c3d99d434a0bd3f7f44b8a4eac371e",
+      "bytes": 5834,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/m2-20261019-235218.md",
+      "git_blob": "187a4e35669166f58052d33fe51587fdaeeff6d4",
+      "sha256": "e830a6b0bfaf06e6b5b0af4a0ff9f668109e5006bc42b5db9614c065ce91db56",
+      "bytes": 4001,
+      "included": true,
+      "extracted_sha256": "e830a6b0bfaf06e6b5b0af4a0ff9f668109e5006bc42b5db9614c065ce91db56",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/evidence/m2-20261019-235218.png",
+      "git_blob": "863680395b17e700d55065b628deea2ad380ea79",
+      "sha256": "d5d1cf35a312bc08243a77ece1f7190b472a18202d71c6d4583543119f870776",
+      "bytes": 38781,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/m2-20261019-235332.md",
+      "git_blob": "62933280df858b0673e2de6abb036cf3d8e8c8ff",
+      "sha256": "945c43cf0d5a6f0b482e3644201377a58cf8c0cc39fd5bda8e879054af774cd0",
+      "bytes": 4106,
+      "included": true,
+      "extracted_sha256": "945c43cf0d5a6f0b482e3644201377a58cf8c0cc39fd5bda8e879054af774cd0",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/evidence/m2-20261019-235332.png",
+      "git_blob": "5687d2cb582eb903f2ece5b40d2354812f6e0711",
+      "sha256": "0a27d82c61f6a38fcbb926431d536ea66c4daa89607c9c598162c7fead5ada8d",
+      "bytes": 42385,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/m3-20261020-000131.md",
+      "git_blob": "352572a29aa53706e18a50d93481a8db7aabe6ee",
+      "sha256": "954c8779a775a4e17309aae3b6ae3ff6856c6809d81be772f1455e155ee82fbb",
+      "bytes": 4381,
+      "included": true,
+      "extracted_sha256": "954c8779a775a4e17309aae3b6ae3ff6856c6809d81be772f1455e155ee82fbb",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/evidence/m3-20261020-000727.md",
+      "git_blob": "d3fe00133fc3eb18d938968527266c0b7ac39f80",
+      "sha256": "7da3fd920f42caeba1cbb83a18980cd37670b4a20787253a16803814c7a1b7d6",
+      "bytes": 2755,
+      "included": true,
+      "extracted_sha256": "7da3fd920f42caeba1cbb83a18980cd37670b4a20787253a16803814c7a1b7d6",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/run-m1.ps1",
+      "git_blob": "ffd87162e0ba6402a109685e207cc4ff371ede6f",
+      "sha256": "975374171316780e2f3938042104262e601fbeff5cf18f6b5803d621e0ece788",
+      "bytes": 7502,
+      "included": true,
+      "extracted_sha256": "975374171316780e2f3938042104262e601fbeff5cf18f6b5803d621e0ece788",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/run-m2.ps1",
+      "git_blob": "e405977d2d4ef6d0d8875886fe5c69f3dfd81282",
+      "sha256": "d443214bc4d20b3841bbd5d8f8276474cc9bcbe4c74b494a03c6e3c943c7329c",
+      "bytes": 12509,
+      "included": true,
+      "extracted_sha256": "d443214bc4d20b3841bbd5d8f8276474cc9bcbe4c74b494a03c6e3c943c7329c",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/run-m3.ps1",
+      "git_blob": "e3263c97106ab86324e8a6259f5baeaa7062c4dc",
+      "sha256": "d3def2897f60632a054dd6263483dda3266594a5369d740b6c87075f17b06b5b",
+      "bytes": 8762,
+      "included": true,
+      "extracted_sha256": "d3def2897f60632a054dd6263483dda3266594a5369d740b6c87075f17b06b5b",
+      "modified_for_extraction": false
+    }
+  ],
+  "licence_texts": [
+    {
+      "path": "LICENSES/ahwoo.brutal.openal/BRUTAL-OPENAL-THIRD-PARTY-NOTICES.txt",
+      "package": "ahwoo.brutal.openal",
+      "version": "2026.10.2",
+      "sha256": "16aeeb0c8b2197c80a5e3a052f5f15447b8a99d6c4bc017ff536ad3b40f5b750"
+    },
+    {
+      "path": "LICENSES/ahwoo.brutal.openal/openal-soft-BSD-3Clause.txt",
+      "package": "ahwoo.brutal.openal",
+      "version": "2026.10.2",
+      "sha256": "b5a08cf98996dd83aa906a72c163600f6cb17a65ce546a553815a1267abd43ff"
+    },
+    {
+      "path": "LICENSES/ahwoo.brutal.openal/openal-soft-COPYING.txt",
+      "package": "ahwoo.brutal.openal",
+      "version": "2026.10.2",
+      "sha256": "d808ce217e5b611854da622b57ec29fe545584c48bc5352fae72a4b6e5074a15"
+    },
+    {
+      "path": "LICENSES/ahwoo.brutal.openal/openal-soft-fmt-LICENSE.txt",
+      "package": "ahwoo.brutal.openal",
+      "version": "2026.10.2",
+      "sha256": "07580f2a3b35709ce703d523f447b242f6dfec7582a8c0df102c7fa2849375f8"
+    },
+    {
+      "path": "LICENSES/ahwoo.brutal.openal/openal-soft-gsl-LICENSE.txt",
+      "package": "ahwoo.brutal.openal",
+      "version": "2026.10.2",
+      "sha256": "4c21dc82a1c7186ea754fd59d504c00947953a3401fe8e24eaa44109ef8e2555"
+    },
+    {
+      "path": "LICENSES/ahwoo.brutal.openal/openal-soft-LICENSE-pffft.txt",
+      "package": "ahwoo.brutal.openal",
+      "version": "2026.10.2",
+      "sha256": "64056328b3e7bc104e24ef96accc1a7abead156f0c02d1b87c97e3f3a28030de"
+    },
+    {
+      "path": "LICENSES/ahwoo.brutal.freetype/BRUTAL-FREETYPE-THIRD-PARTY-NOTICES.txt",
+      "package": "ahwoo.brutal.freetype",
+      "version": "2026.10.1",
+      "sha256": "a067d872021f04e50dd2122eeae388ac9b06893f3f51f3bd33e4da23d42379f9"
+    },
+    {
+      "path": "LICENSES/ahwoo.brutal.freetype/FTL.txt",
+      "package": "ahwoo.brutal.freetype",
+      "version": "2026.10.1",
+      "sha256": "5a5ee54c5001bbad1cdc1a57cc3dd4c42199b2da09d39c7ee41fab002d02967f"
+    }
+  ],
+  "extraction_changes": [
+    "Colossus/Speech.cs: require explicit Piper engine and model; no source-machine SIWIS auto-selection.",
+    "Colossus/Program.cs: voice-state mirror opt-in via --voice-mirror.",
+    "Colossus/Colossus.csproj: optional baked assets copied only when present; procedural runtime fallbacks retained."
+  ]
+}
