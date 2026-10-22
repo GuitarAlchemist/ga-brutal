@@ -25,12 +25,19 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          python-version: '3.12'
+          go-version-file: go.mod
+          cache: false
 
+      # The checker's tests break a copy of the snapshot in each way it guards against, and expect it to fail.
       - name: Snapshot matches PROVENANCE.json
-        run: python -I scripts/verify_snapshot.py
+        run: |
+          go vet ./scripts/...
+          if ($LASTEXITCODE) { throw 'go vet failed' }
+          go test ./scripts/...
+          if ($LASTEXITCODE) { throw 'the checker tests failed' }
+          go run ./scripts/snapshot verify
 
       # The F# locks pin the FSharp.Core that the SDK brings, so the SDK must be exactly the one they were made with.
       # A private install directory keeps the runner's other SDKs out of global.json's roll-forward.
@@ -72,4 +79,4 @@ jobs:
         run: |
           git status --porcelain
           if (git status --porcelain) { throw 'the build changed tracked or unignored files' }
-          python -I scripts/verify_snapshot.py
+          go run ./scripts/snapshot verify
