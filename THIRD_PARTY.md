@@ -29,3 +29,13 @@ their own licence review before use. Nothing here accepts an agreement or downlo
 
 Generated assets and tools are not all MIT simply because the surrounding source is MIT. In particular,
 the source's optional TRELLIS.2/DINOv3 workflow has DINOv3-specific terms and attribution.
+
+## NVIDIA Streamline
+
+`Experiments/Brutal/Colossus/Streamline.cs` mirrors structures and constants from Streamline's headers
+(`sl_core_types.h`, `sl_consts.h`, `sl_dlss.h`, `sl_dlss_d.h`, `sl_dlss_g.h`, `sl_reflex.h`, `sl_pcl.h`,
+`sl_helpers_vk.h`). NVIDIA publishes them under the MIT-style licence copied in
+`LICENSES/NVIDIA-Streamline/license.txt`, from
+https://github.com/NVIDIAGameWorks/Streamline/blob/2122257e0fce486f91b385aa63b9a09b0a34b363/license.txt (v2.14.1).
+No NVIDIA binary is in this repository: Colossus loads Streamline's DLLs from the user's own copy of NVIDIA's release,
+each only once its NVIDIA signature verifies.
