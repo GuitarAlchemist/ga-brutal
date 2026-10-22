@@ -1,13 +1,13 @@
 {
   "source_repository": "https://github.com/GuitarAlchemist/ga",
-  "source_pull_request": "https://github.com/GuitarAlchemist/ga/pull/839",
-  "source_commit": "1c5781daed923ffc3104296554bbe956a16d3758",
+  "source_pull_request": "https://github.com/GuitarAlchemist/ga/pull/840",
+  "source_commit": "76efbffd5af82b46c3146957a6bd4504008eeb89",
   "source_subtree": "Experiments/Brutal/",
-  "source_tree": "ddef33b2dd3f9d9a934c1e89fac73163e8789bac",
+  "source_tree": "685288dbaf2ff90340d593b3fc65e6956a61e0fb",
   "coordination_epic": "https://github.com/GuitarAlchemist/gaia/issues/257",
   "brutal_licence_revision": "a25cdf80b2a15530e7da6cff744def9d841ad3c3",
   "owner_session": "fe20417b-cfad-44ec-ac12-db95df2277a6",
-  "owner_acknowledgement": "Not requested or received. No source checkout files were changed.",
+  "owner_acknowledgement": "Synced by the owner session at the author's request on 2026-10-21. No source checkout files were changed.",
   "snapshot_method": "Read immutable git blobs; never copy the mutable working tree.",
   "files": [
     {
@@ -21,20 +21,20 @@
     },
     {
       "path": "Experiments/Brutal/Colossus/Colossus.csproj",
-      "git_blob": "e8831266321598c1531d24b6db0597d5a059515a",
-      "sha256": "beb4b789ee97982a1b329dcf690ff579bc90178c8a21117aeae6a9a42fb980fb",
-      "bytes": 2364,
+      "git_blob": "7553cc1a56c3d2a4306499b8d5f38c1c3e24f43f",
+      "sha256": "6dc38cdd07858905acac8c3fb88860557b3b939e05e5723393b3a0c749fcc1cb",
+      "bytes": 2571,
       "included": true,
-      "extracted_sha256": "3593e9631b96561a03a7417579d6b4b096a53e76005976af896ef983a57f8678",
+      "extracted_sha256": "e18ad6076a0475a36692d6fbf510a1ed2e0f6285c7ba5675eda3b1efca913aef",
       "modified_for_extraction": true
     },
     {
       "path": "Experiments/Brutal/Colossus/Program.cs",
-      "git_blob": "e876069f0b20345d6017b45689e53ad0411d2aa6",
-      "sha256": "5b814e494da802ad3bc7fe1feb993d64225a811408f7615909859b5f839e7170",
-      "bytes": 181613,
+      "git_blob": "1975c6ca1fbc5211a4331b038f87ed974b56d055",
+      "sha256": "2ae759eace2d9037f2771bc82b5f901c02bf4ec2751ff4e510f4e1aa4ab60c15",
+      "bytes": 261839,
       "included": true,
-      "extracted_sha256": "626fa2699645d8344f189d7c2664d9ec8494f49f458077102ab08bc282bdf19e",
+      "extracted_sha256": "99b06a48823c38d82373149dbaa4b0582fde19dec7db003c6dbb57376ad749c2",
       "modified_for_extraction": true
     },
     {
@@ -53,6 +53,15 @@
       "bytes": 5569,
       "included": true,
       "extracted_sha256": "2e465c81ae1014f8665f17c18adbf2bd96658c73579a686855fcc4aefe1455f0",
+      "modified_for_extraction": true
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/Streamline.cs",
+      "git_blob": "bfaf275abdafe9680a0e6dd330d34b2123417c4c",
+      "sha256": "9875101c145e211ba7cab4542ffbf74b7867f994fad58cc0038f545d70c0e84b",
+      "bytes": 51706,
+      "included": true,
+      "extracted_sha256": "70a332caf0262ea17d62634a750c9ec98f44793fe03a3c976a15cf83fa4b05f9",
       "modified_for_extraction": true
     },
     {
@@ -100,20 +109,20 @@
     },
     {
       "path": "Experiments/Brutal/Colossus/packages.lock.json",
-      "git_blob": "94994c31b9431b2736e8c110ddf00818d94287d2",
-      "sha256": "9651cad699c28f07a8a2356e99490380c3dfe10a3c899f2f89b4bf69629b43c7",
-      "bytes": 17086,
+      "git_blob": "e473242f890dd5f8919547e2303fba2816659f03",
+      "sha256": "24e90ca40840a6da9e66a7a07bc18e5e2f111de75b69bd580820701a9bb09dce",
+      "bytes": 17422,
       "included": true,
-      "extracted_sha256": "9651cad699c28f07a8a2356e99490380c3dfe10a3c899f2f89b4bf69629b43c7",
+      "extracted_sha256": "24e90ca40840a6da9e66a7a07bc18e5e2f111de75b69bd580820701a9bb09dce",
       "modified_for_extraction": false
     },
     {
       "path": "Experiments/Brutal/Colossus/textures/bake_blender.py",
-      "git_blob": "f3af2ac4adcbf4e9627bbeebfb06176ec5c1ac85",
-      "sha256": "891ef4b1b5f6370159ea11ce15192c3be53315e1e9cf298d52319eed45786742",
-      "bytes": 3384,
+      "git_blob": "76b2d836d80d5fa26746bc20749b4162f19e8ab1",
+      "sha256": "261cd72a0110ea4623948af3ddab7d6ba6ea77affaf34e5506647cd759217870",
+      "bytes": 3419,
       "included": true,
-      "extracted_sha256": "891ef4b1b5f6370159ea11ce15192c3be53315e1e9cf298d52319eed45786742",
+      "extracted_sha256": "261cd72a0110ea4623948af3ddab7d6ba6ea77affaf34e5506647cd759217870",
       "modified_for_extraction": false
     },
     {
@@ -172,11 +181,11 @@
     },
     {
       "path": "Experiments/Brutal/Colossus/textures/generate_comfyui.py",
-      "git_blob": "b32f75aaf4b2237d12c238c7eccfc3a7d52ffb02",
-      "sha256": "cd512c85a4f0526f734368143dd592760703460ee15ef3bd481cea5300d316cb",
-      "bytes": 2893,
+      "git_blob": "dede42ef4c7e6179b8c4c170a3439f51181d0959",
+      "sha256": "49205e0df909592bea82e733595b44b77b6ffb8330d92a585ba2f961483972f4",
+      "bytes": 3554,
       "included": true,
-      "extracted_sha256": "cd512c85a4f0526f734368143dd592760703460ee15ef3bd481cea5300d316cb",
+      "extracted_sha256": "49205e0df909592bea82e733595b44b77b6ffb8330d92a585ba2f961483972f4",
       "modified_for_extraction": false
     },
     {
@@ -195,6 +204,42 @@
       "bytes": 510077,
       "included": true,
       "extracted_sha256": "d48c2ed9a5b165f944eb0767fe929493e9b8121c3177b7d10f0b691c7fad53b3",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/marble_albedo.png",
+      "git_blob": "6c359fce56ca6a9ab208bd7551dc8c6c60bab6f9",
+      "sha256": "4209cdd705faa70a597982f2847558dd40050d2f7c309fff1091a07a260b3092",
+      "bytes": 433139,
+      "included": true,
+      "extracted_sha256": "4209cdd705faa70a597982f2847558dd40050d2f7c309fff1091a07a260b3092",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/marble_nrh.png",
+      "git_blob": "784deac5145b89d5d0d181bacdb2a2659bd48a83",
+      "sha256": "d76ab1516c2a9bda4046af83e49d4128388aa8a804d9badf00a60a79ad6db092",
+      "bytes": 568355,
+      "included": true,
+      "extracted_sha256": "d76ab1516c2a9bda4046af83e49d4128388aa8a804d9badf00a60a79ad6db092",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/terracotta_albedo.png",
+      "git_blob": "c9a6c1a05131eeb67e477f3b21903c1bf902999d",
+      "sha256": "e21ea43e2fa06f6be051bbd56f325e8f2069b0dc7a3b50d27e7fe877e3be4432",
+      "bytes": 528339,
+      "included": true,
+      "extracted_sha256": "e21ea43e2fa06f6be051bbd56f325e8f2069b0dc7a3b50d27e7fe877e3be4432",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/textures/terracotta_nrh.png",
+      "git_blob": "9c2613802adddc49bbe1b4ea38aab2dd8d9d8d48",
+      "sha256": "4f4e42b0745936a5bbb92b91a0cb04fbe33105f09eb90e4346a0c9769eda26ef",
+      "bytes": 719864,
+      "included": true,
+      "extracted_sha256": "4f4e42b0745936a5bbb92b91a0cb04fbe33105f09eb90e4346a0c9769eda26ef",
       "modified_for_extraction": false
     },
     {
@@ -315,29 +360,47 @@
     },
     {
       "path": "Experiments/Brutal/HallSlice/HallSlice.csproj",
-      "git_blob": "5c950853dceb3eecb4712b00889d3300afe10be9",
-      "sha256": "0d91c6e4d1660d362d404046a84c1e67e19163e01d43546a8ddd2a2cc6327ec2",
-      "bytes": 1013,
+      "git_blob": "67170aea3410abe98fa477d8525196bd9bc01733",
+      "sha256": "fbb229836c448ce21bf6985890101e2c06de7a69f62b09b345268bff69d0c3fc",
+      "bytes": 1222,
       "included": true,
-      "extracted_sha256": "0d91c6e4d1660d362d404046a84c1e67e19163e01d43546a8ddd2a2cc6327ec2",
+      "extracted_sha256": "fbb229836c448ce21bf6985890101e2c06de7a69f62b09b345268bff69d0c3fc",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/HallSlice/LegoAdapter.cs",
+      "git_blob": "031fee76d469f3808bc5835d94fcf995458357ab",
+      "sha256": "8e18368bfe1370a42f4819b94563918e6fde725ec14f1b9431cb2d5265479db8",
+      "bytes": 5608,
+      "included": true,
+      "extracted_sha256": "8e18368bfe1370a42f4819b94563918e6fde725ec14f1b9431cb2d5265479db8",
       "modified_for_extraction": false
     },
     {
       "path": "Experiments/Brutal/HallSlice/Program.cs",
-      "git_blob": "0d4b922cc19d879475aaefc70d608e76fe050b6c",
-      "sha256": "899fe9b8852fdeaf089c588660a65b2295c2be8222ccff321db63c7af2dc8e79",
-      "bytes": 32856,
+      "git_blob": "8cc91cd2cede46a884600cb38ac32aaed56dbea4",
+      "sha256": "054d70cb4f2632fac470d01e2b7aff3793c21f5dab20216c799fcce2fdbc74bf",
+      "bytes": 43511,
       "included": true,
-      "extracted_sha256": "899fe9b8852fdeaf089c588660a65b2295c2be8222ccff321db63c7af2dc8e79",
+      "extracted_sha256": "054d70cb4f2632fac470d01e2b7aff3793c21f5dab20216c799fcce2fdbc74bf",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/HallSlice/SliceMesh.cs",
+      "git_blob": "8057b16aa88ec7b4fda63a72d7e41a1de45aebc1",
+      "sha256": "42455dafaabd5e4fcd25568fdf1ab837d56e279bdae144f349b9e5f716d2db50",
+      "bytes": 1757,
+      "included": true,
+      "extracted_sha256": "42455dafaabd5e4fcd25568fdf1ab837d56e279bdae144f349b9e5f716d2db50",
       "modified_for_extraction": false
     },
     {
       "path": "Experiments/Brutal/HallSlice/packages.lock.json",
-      "git_blob": "25d0eb2a22d61a99eff5f77b1b0b30fff9a7ce42",
-      "sha256": "369c21d8356149743e4a52f4ca8f67e866290f485c7939a11aeca3ff5bce2d55",
-      "bytes": 10774,
+      "git_blob": "413c4b99a47a53139e9888a47a2eaae3779ac6ab",
+      "sha256": "d2bd433dc7004a18f26b26ff198aa70f27d5dd5d1fde67deefd7d1321d41fb86",
+      "bytes": 11110,
       "included": true,
-      "extracted_sha256": "369c21d8356149743e4a52f4ca8f67e866290f485c7939a11aeca3ff5bce2d55",
+      "extracted_sha256": "d2bd433dc7004a18f26b26ff198aa70f27d5dd5d1fde67deefd7d1321d41fb86",
       "modified_for_extraction": false
     },
     {
@@ -368,13 +431,148 @@
       "modified_for_extraction": false
     },
     {
-      "path": "Experiments/Brutal/README.md",
-      "git_blob": "44dc6293dfadeb71c12024d37a86b65eb7f3644f",
-      "sha256": "7d49456084e45ff661941437fc932ca8f670f788c22afe44c763a2e7bb7d98f4",
-      "bytes": 48082,
+      "path": "Experiments/Brutal/Lego.Cli/Lego.Cli.fsproj",
+      "git_blob": "dd8a9af547d774121a228b906d8f9e6dd1dc1f25",
+      "sha256": "f7ab2b9cc132eeca84151adbda1584375c753654aad6dc460593f0c6dc3bbd60",
+      "bytes": 700,
       "included": true,
-      "extracted_sha256": "7d49456084e45ff661941437fc932ca8f670f788c22afe44c763a2e7bb7d98f4",
+      "extracted_sha256": "f7ab2b9cc132eeca84151adbda1584375c753654aad6dc460593f0c6dc3bbd60",
       "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego.Cli/Program.fs",
+      "git_blob": "6244e59b1c3ecd4e0bb3bab3e8dd730f5ba696b2",
+      "sha256": "2088a26130c9e363f50fc620e9d5757847db60c8f3dd9a1863015c385a0e34ad",
+      "bytes": 1917,
+      "included": true,
+      "extracted_sha256": "2088a26130c9e363f50fc620e9d5757847db60c8f3dd9a1863015c385a0e34ad",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego.Cli/Tests.fs",
+      "git_blob": "51314faedbbe796d34e2b25aa5ff180a43d0224b",
+      "sha256": "617e47bd960eae186fc2b2ac8589ddd7eae01ba5f739ba9f65339dfa07b4af1d",
+      "bytes": 15682,
+      "included": true,
+      "extracted_sha256": "617e47bd960eae186fc2b2ac8589ddd7eae01ba5f739ba9f65339dfa07b4af1d",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego.Cli/packages.lock.json",
+      "git_blob": "6dfccd6061a6e72534bbfea9e39468c2fe57c1a7",
+      "sha256": "43906190c1ff1055deee4b8d5e81898a1e3d2cd1f7082dec70c406ea93bc8f73",
+      "bytes": 434,
+      "included": true,
+      "extracted_sha256": "43906190c1ff1055deee4b8d5e81898a1e3d2cd1f7082dec70c406ea93bc8f73",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego/Api.fs",
+      "git_blob": "ab92149c2d3b373cf42f98b065fca8fb36439b27",
+      "sha256": "e319b6f77e357126bce08f595e7c6d1113d63de90523a1b33fc36bba857067c4",
+      "bytes": 4005,
+      "included": true,
+      "extracted_sha256": "e319b6f77e357126bce08f595e7c6d1113d63de90523a1b33fc36bba857067c4",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego/Blocks.fs",
+      "git_blob": "04c7c0afee81126ff367545c9dde86d0cfbb5332",
+      "sha256": "cd442e706bb54b24b9e10fe8b5673c89a34ed847bed66974e4f603d26b2d9688",
+      "bytes": 18832,
+      "included": true,
+      "extracted_sha256": "cd442e706bb54b24b9e10fe8b5673c89a34ed847bed66974e4f603d26b2d9688",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego/Describe.fs",
+      "git_blob": "b0ce3a9fd850d585db320f66a34980552cb1fdb3",
+      "sha256": "613309c7dd02c30e200f164c5f41a358e456197ea6881e0f7e069756f753a429",
+      "bytes": 5629,
+      "included": true,
+      "extracted_sha256": "613309c7dd02c30e200f164c5f41a358e456197ea6881e0f7e069756f753a429",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego/Generate.fs",
+      "git_blob": "5464c24873d3514ec4c5a3b24ef4fe89380622e2",
+      "sha256": "8b994f93e1b14cc5f770d38d8d804615a6163e3de111fbeeba9d77368fe8bbc5",
+      "bytes": 8843,
+      "included": true,
+      "extracted_sha256": "8b994f93e1b14cc5f770d38d8d804615a6163e3de111fbeeba9d77368fe8bbc5",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego/Lego.fsproj",
+      "git_blob": "1f818f8673238747656c9eb7ec84179d8b42e385",
+      "sha256": "16a8c5005eddae27976ea772dfa4e5424ae45d185b72c7c6202c5d310b6d989d",
+      "bytes": 943,
+      "included": true,
+      "extracted_sha256": "16a8c5005eddae27976ea772dfa4e5424ae45d185b72c7c6202c5d310b6d989d",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego/Model.fs",
+      "git_blob": "dd1178afeeb1a74847904f41b3aa658053a901b9",
+      "sha256": "ac44e7067730897d4fca91617ff68af67e7a1529b56c367d49add89ab6af5228",
+      "bytes": 9322,
+      "included": true,
+      "extracted_sha256": "ac44e7067730897d4fca91617ff68af67e7a1529b56c367d49add89ab6af5228",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego/Polis.fs",
+      "git_blob": "09b8e3957701f4e39bd17d98084c5ceaeb76cadf",
+      "sha256": "348a38216a40e312d5cd4de7d6ac8a0ba4db7d23b8a0ab936099649c0c7bcc32",
+      "bytes": 30858,
+      "included": true,
+      "extracted_sha256": "348a38216a40e312d5cd4de7d6ac8a0ba4db7d23b8a0ab936099649c0c7bcc32",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego/Seeds.fs",
+      "git_blob": "315cb3c5a4c7e4c4c77e2c25b5a0c3656abc6403",
+      "sha256": "5fc46fef00a42a48963cd4cff4fbf6a58f9e945c0f06e4cb2b87681db4059aad",
+      "bytes": 1548,
+      "included": true,
+      "extracted_sha256": "5fc46fef00a42a48963cd4cff4fbf6a58f9e945c0f06e4cb2b87681db4059aad",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego/Space.fs",
+      "git_blob": "f45d1f285cbb9c4d713148e72b74aa8090eef891",
+      "sha256": "c1580d2297f1bfedfac4f8d1adb126d29a4cf4cc2e10857f04eb7d991b6c3acc",
+      "bytes": 1809,
+      "included": true,
+      "extracted_sha256": "c1580d2297f1bfedfac4f8d1adb126d29a4cf4cc2e10857f04eb7d991b6c3acc",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego/Validate.fs",
+      "git_blob": "90a5826a36a6b67f42a52722be19ac43da193ee3",
+      "sha256": "7722806ad2db8e5847753ca6b7211d123d1e0c3319375c5ba14b5e80de72a387",
+      "bytes": 2260,
+      "included": true,
+      "extracted_sha256": "7722806ad2db8e5847753ca6b7211d123d1e0c3319375c5ba14b5e80de72a387",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Lego/packages.lock.json",
+      "git_blob": "4b4ff3bd98f30ee25eff258b25ecbed4f9570a0b",
+      "sha256": "ec99fbed7bed8cc0aed93cb1e9d0dc9a20acbda3e332ad6a7e3fe59fa28042d1",
+      "bytes": 306,
+      "included": true,
+      "extracted_sha256": "ec99fbed7bed8cc0aed93cb1e9d0dc9a20acbda3e332ad6a7e3fe59fa28042d1",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/README.md",
+      "git_blob": "db24cad2162fbf13abba3ae82291899c42ace781",
+      "sha256": "4cb7e4e068eb000e97b5cd4bb323fbfd8a929749ad14ec3b96127f2d303d3fe7",
+      "bytes": 80539,
+      "included": true,
+      "extracted_sha256": "afd983ac790a24995ce1f8c9f38c4716e440e93cad40cfbe498f1e6ace10937c",
+      "modified_for_extraction": true
     },
     {
       "path": "Experiments/Brutal/Tour/Program.cs",
@@ -440,6 +638,54 @@
       "git_blob": "73d5a8fa487ba4bd41cc5ef3d61d936e46fefd6b",
       "sha256": "dbbbc2da1914835a535a82c4853266dc568707f5b0ed7d675b782491af66eca5",
       "bytes": 1886198,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/lego-acropolis-marble-20261021.jpg",
+      "git_blob": "ea2ea91878ac47cc75193c245faebea565076357",
+      "sha256": "43cab61a98f896c748cc34e3092bc9c97e7bdd3db51017c076dfcee596196e7b",
+      "bytes": 242244,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/lego-acropolis-pt-20261021.jpg",
+      "git_blob": "b028165d1044bbb1f6be45c0613e0bb4eae16f58",
+      "sha256": "defcb631cd3e4ff4778a6cf6bdd617e93f2e9280fe6480db56cb49409865901e",
+      "bytes": 239092,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/lego-acropolis-rtx-20261021.jpg",
+      "git_blob": "4e7a50cc64ccd31275ffbd1d741e6f51df3c1635",
+      "sha256": "65221f9ebbeb9821e7f7b9aba7c595fa46c47bae7ba13e3f1899f239d8bef78c",
+      "bytes": 234601,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/lego-polis-rtx-20261021.jpg",
+      "git_blob": "704750063eb16aa571092ad914b173874f55dfed",
+      "sha256": "2d0dfdde739645db02e4088a3b3447ad8a661fd89fe571b312b65bb424b8ebe9",
+      "bytes": 195371,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/lego-sanctuary-20261021.png",
+      "git_blob": "4f5c21edae7679692e4d1f2a02517d8fcc880d41",
+      "sha256": "8b954f8ee9b17446ebb254a97b7018de27068588562c57ca63e9fbdda1e226cf",
+      "bytes": 24887,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/lego-temple-20261021.png",
+      "git_blob": "d07fad1595c0fc98c82994044fb6366e385e751f",
+      "sha256": "d82ccef899b9c5708d97f6f75b29c6c360652c0a0cff264fe9c551815f0e69ee",
+      "bytes": 20882,
       "included": false,
       "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
     },
@@ -511,6 +757,30 @@
       "included": true,
       "extracted_sha256": "7da3fd920f42caeba1cbb83a18980cd37670b4a20787253a16803814c7a1b7d6",
       "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/evidence/swarm-night-pt-20261021.jpg",
+      "git_blob": "a156f9f081c9cdbd0c1cc696bb63636ad5bedd23",
+      "sha256": "fc7d290821d50f32ce6e8f399d686b89524435e0352a8f319cbaeed621353e75",
+      "bytes": 140082,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/swarm-propylon-pt-20261021.jpg",
+      "git_blob": "cd17d2a5ac3ad76c0b685db38e01b67a89f9739c",
+      "sha256": "5c103919dd2db93a723a2976fce14ca976e9c08eff2c9fbc1dc8e3f5c008fe03",
+      "bytes": 101772,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
+    },
+    {
+      "path": "Experiments/Brutal/evidence/swarm-tholos-20261021.jpg",
+      "git_blob": "c2301984db367fc4444cc8d3fc79785848f14027",
+      "sha256": "09766df8a0eae4bb6f35329c1fabf2ec6b55fc29f55c80626e94875b4d1585a9",
+      "bytes": 180295,
+      "included": false,
+      "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
     },
     {
       "path": "Experiments/Brutal/run-m1.ps1",
@@ -593,6 +863,9 @@
   "extraction_changes": [
     "Colossus/Speech.cs: require explicit Piper engine and model; no source-machine SIWIS auto-selection.",
     "Colossus/Program.cs: voice-state mirror opt-in via --voice-mirror.",
-    "Colossus/Colossus.csproj: optional baked assets copied only when present; procedural runtime fallbacks retained."
-  ]
+    "Colossus/Colossus.csproj: optional baked assets copied only when present; procedural runtime fallbacks retained.",
+    "Colossus/Program.cs, Streamline.cs and Brutal/README.md: Streamline's folder only from an explicit --sl-path; no source-machine default."
+  ],
+  "source_pull_request_base": "https://github.com/GuitarAlchemist/ga/pull/839",
+  "previous_source_commit": "1c5781daed923ffc3104296554bbe956a16d3758"
 }
