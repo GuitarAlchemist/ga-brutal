@@ -1,7 +1,7 @@
 {
-  "at": "2026-10-21T02:32:29.783815+00:00",
-  "sdk": "10.0.113",
-  "source_commit": "1c5781daed923ffc3104296554bbe956a16d3758",
+  "at": "2026-10-22T01:22:49.2172603Z",
+  "sdk": "11.0.100-preview.3.26207.106",
+  "source_commit": "76efbffd5af82b46c3146957a6bd4504008eeb89",
   "checks": [
     {
       "project": "HelloBrutal",
@@ -9,8 +9,8 @@
       "build": "passed",
       "warnings": 0,
       "errors": 0,
-      "restore_log_sha256": "02cfeef3f5f8da53f8473d265033b0042417e4eae25c5754ce08efe4c0dc60b5",
-      "build_log_sha256": "41009c91088fdd663152c9a63f69c799b9e5d9e3854c1ac3b0fc144a9e0cbb28"
+      "restore_log_sha256": "43d2fa67b78c125a9242104758748fc8cb736b417e67c90c740024b2798c71df",
+      "build_log_sha256": "b6791083d4f9d8a7e04037e99d431d813de614f96962341c29a33daf9ac6c0bc"
     },
     {
       "project": "HallSlice",
@@ -18,8 +18,8 @@
       "build": "passed",
       "warnings": 0,
       "errors": 0,
-      "restore_log_sha256": "4260e6f8cb3a0ef124771c79a89d81b05e34f7ad6728eaddc30cc0fab19f9e9b",
-      "build_log_sha256": "bb5cbe0553c9ab0891b4c58aefdab48654d334438e85f4c83e26ff61fcd457c6"
+      "restore_log_sha256": "2f3de2bf3f92b871786c5c63e4ff32ecc80171ba44970e656ea5b9c5c057121e",
+      "build_log_sha256": "ccc835e3688736ceceefbfe17f68acc6359d012fea026b74cbcb7ba820cd462f"
     },
     {
       "project": "Colossus",
@@ -27,8 +27,8 @@
       "build": "passed",
       "warnings": 0,
       "errors": 0,
-      "restore_log_sha256": "b3977e622a6b5767435f03e6467f772a5d12b5f31ad9d5124f04351c45fb90cd",
-      "build_log_sha256": "92b8d6a57412fe6c81ef55b753daeaa3e98bd58c43bd3fc63f5bb0c52cc49dc6"
+      "restore_log_sha256": "c2cb8fd909011afd259d0f3c3069ccb91db3a2b08eaed736eca2ef40bec69b20",
+      "build_log_sha256": "5bd30291cdfa529d834314c776d43f9620260525008590a60e7ccb6bf25a95b6"
     },
     {
       "project": "Tour",
@@ -36,16 +36,38 @@
       "build": "passed",
       "warnings": 2,
       "errors": 0,
-      "restore_log_sha256": "dfac8edda6e6fcccad239f1ba17ffe611ac8eaf3379d07d20bf9191b503c9a90",
-      "build_log_sha256": "473bb761dea6766c9dcf7b5731b72918ab7d18e4b0cf1d1fcf98116a00453d75"
+      "restore_log_sha256": "c251e768a43ca7fb396c1d35944f3f3e98f3e35720972d433dbc548e30428d77",
+      "build_log_sha256": "a3e764668337016b07ceda8c0ec890823adbc9f088485af79816b3c32b88b5ea"
+    },
+    {
+      "project": "Lego",
+      "locked_restore": "passed",
+      "build": "passed",
+      "warnings": 0,
+      "errors": 0,
+      "restore_log_sha256": "2ad9967f2280d0195ad457a92fe6a353a8492625846632386df6dfc446efe4bc",
+      "build_log_sha256": "0611d720a211cf821dd8405b1dd7f07d060b0c61e1b3ca866a788671cac4d9f8"
+    },
+    {
+      "project": "Lego.Cli",
+      "locked_restore": "passed",
+      "build": "passed",
+      "warnings": 0,
+      "errors": 0,
+      "restore_log_sha256": "3d6c69204335da9ec06e0df7b490250c3ab4a1040c3f492492ca26db595c3ede",
+      "build_log_sha256": "8b642a974405d0ba056f6596f1a44ce58cd5dbb7fb405d93f09f9cf5338812b8"
     }
   ],
   "gpu_or_runtime_executed": false,
   "engines_or_models_downloaded": false,
   "secret_scan": "patterns checked by scripts/verify_snapshot.py; not a guarantee against every possible secret",
   "memory_before_validation": {
-    "available_mb": 28467,
-    "committed_gib": 93.98,
-    "commit_headroom_gib": 33.43
+    "available_mb": 10169
+  },
+  "lego_tests": {
+    "command": "dotnet run -c Release --project Experiments/Brutal/Lego.Cli -p:RestoreLockedMode=true -- test",
+    "release": "20 passed, 0 failed, from the repository root with SDK 10.0.113; locks unchanged",
+    "debug": "19 passed, 1 failed: \"describing again and again keeps nothing\" kept 6,362,584 bytes; unoptimised code keeps locals alive",
+    "sdk_note": "Run outside the repository, dotnet chose SDK 11.0.100-preview.3, whose restore rewrote the Lego locks (FSharp.Core 11.0.100-preview3.26207.106); they were restored from the source blobs"
   }
 }

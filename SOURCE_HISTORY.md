@@ -1,6 +1,25 @@
 # Source history
 
-Snapshot provenance; the original GA history and PR remain intact.
+Snapshot provenance; the original GA history and PRs remain intact.
+
+Synced to GA #840 at `76efbffd` on 2026-10-21:
+
+- [76efbffd5af82b46c3146957a6bd4504008eeb89](https://github.com/GuitarAlchemist/ga/commit/76efbffd5af82b46c3146957a6bd4504008eeb89) Colossus: night every fourth cycle, a HUD-less tag for DLSS-G, fewer bounces in 4K
+- [0982131dea3f73b26a86c3959b20bd8924a76553](https://github.com/GuitarAlchemist/ga/commit/0982131dea3f73b26a86c3959b20bd8924a76553) Merge claude/brutal-257: make the swapchain again when it goes out of date
+- [c51fd5e1b6460185f340ebea9b6e3fef0f158185](https://github.com/GuitarAlchemist/ga/commit/c51fd5e1b6460185f340ebea9b6e3fef0f158185) Colossus: make the swapchain again when it goes out of date
+- [d6aec35024ada610c90f633f2bbd80044e0cece3](https://github.com/GuitarAlchemist/ga/commit/d6aec35024ada610c90f633f2bbd80044e0cece3) Colossus: frame generation (DLSS-G) with --fg
+- [319d390f117db45b79a8eccf971d6b3a8b8bbf74](https://github.com/GuitarAlchemist/ga/commit/319d390f117db45b79a8eccf971d6b3a8b8bbf74) Colossus: --fullscreen, and the max out measured in 4K
+- [8e03e4a56b9404b08d934e0a1e6d9ad92d235d28](https://github.com/GuitarAlchemist/ga/commit/8e03e4a56b9404b08d934e0a1e6d9ad92d235d28) Colossus: marble and terracotta for the Lego blocks; visible max-out run
+- [5b6addb76090d889bb1f767536bbc7fa16d1c570](https://github.com/GuitarAlchemist/ga/commit/5b6addb76090d889bb1f767536bbc7fa16d1c570) Colossus: the Lego camera frames the scene and sways, it does not orbit
+- [f18f38b3b5c2b9e7ad6a73e12e7f49f14c3aff0c](https://github.com/GuitarAlchemist/ga/commit/f18f38b3b5c2b9e7ad6a73e12e7f49f14c3aff0c) Colossus: the swarm builds Lego blocks, and --pt path traces
+- [5584f3dfee2f3397ba6fae3be9f9846684e04d9f](https://github.com/GuitarAlchemist/ga/commit/5584f3dfee2f3397ba6fae3be9f9846684e04d9f) Lego: surfaces, a city of blocks, and the Colossus's RTX
+- [c118b051b70d36596fa29cc8f4266b96e634a429](https://github.com/GuitarAlchemist/ga/commit/c118b051b70d36596fa29cc8f4266b96e634a429) Merge remote-tracking branch 'origin/claude/brutal-257' into claude/brutal-lego
+- [40d74f525517c0af910c4f02bf536eec9a03e735](https://github.com/GuitarAlchemist/ga/commit/40d74f525517c0af910c4f02bf536eec9a03e735) HallSlice: --tour, the Lego composition shown step by step
+- [6784a61d7588a36ceed583920c85b1bcf2601d15](https://github.com/GuitarAlchemist/ga/commit/6784a61d7588a36ceed583920c85b1bcf2601d15) Lego: composable BRUTAL scenes from typed, nested blocks
+- [d046738fa89615071cb430ebab761cf263757a9a](https://github.com/GuitarAlchemist/ga/commit/d046738fa89615071cb430ebab761cf263757a9a) Colossus: DLSS Ray Reconstruction (--rr)
+- [7cd2a7cf535c3bd4c69d4675760de54152e23617](https://github.com/GuitarAlchemist/ga/commit/7cd2a7cf535c3bd4c69d4675760de54152e23617) Colossus: NVIDIA DLSS through Streamline, loaded at run time (--dlss)
+
+First extraction, from GA #839 at `1c5781da`:
 
 - [1c5781daed923ffc3104296554bbe956a16d3758](https://github.com/GuitarAlchemist/ga/commit/1c5781daed923ffc3104296554bbe956a16d3758) Colossus: open voice, glass/metal/concrete materials, RTX reflections, cast cinematic
 - [f5d82793c92389732dd245c084209a9944f2d2c6](https://github.com/GuitarAlchemist/ga/commit/f5d82793c92389732dd245c084209a9944f2d2c6) Colossus: an angry giant's voice, English subtitles, and cues for a stream

@@ -21,12 +21,18 @@ assert sorted(modified) == sorted([
     'Experiments/Brutal/Colossus/Program.cs',
     'Experiments/Brutal/Colossus/Speech.cs',
     'Experiments/Brutal/Colossus/Colossus.csproj',
+    'Experiments/Brutal/Colossus/Streamline.cs',
+    'Experiments/Brutal/README.md',
 ])
-projects = list(ROOT.glob('Experiments/Brutal/*/*.csproj'))
-assert len(projects) == 4
+projects = list(ROOT.glob('Experiments/Brutal/*/*.csproj')) + list(ROOT.glob('Experiments/Brutal/*/*.fsproj'))
+assert len(projects) == 6
+lego = (ROOT / 'Experiments/Brutal/Lego/Lego.fsproj').resolve()
 for project in projects:
     tree = ET.parse(project)
-    assert not tree.findall('.//ProjectReference'), project
+    # The only project reference allowed is the snapshot's own Lego library, never GA.
+    for reference in tree.findall('.//ProjectReference'):
+        target = (project.parent / reference.attrib['Include'].replace('\\', '/')).resolve()
+        assert target == lego, (project, target)
     assert not tree.findall('.//Import'), project
     assert (project.parent / 'packages.lock.json').exists()
     for package in tree.findall('.//PackageReference'):
@@ -38,9 +44,9 @@ for project in projects:
     lock = json.loads((project.parent / 'packages.lock.json').read_text())
     for framework, packages in lock['dependencies'].items():
         for name, package in packages.items():
-            assert package.get('type', '').lower() != 'project', (project, name)
+            assert package.get('type', '').lower() != 'project' or name.lower() == 'lego', (project, name)
             assert 'fmod' not in name.lower()
-assert len(list(ROOT.glob('Experiments/Brutal/Colossus/textures/*.png'))) == 8
+assert len(list(ROOT.glob('Experiments/Brutal/Colossus/textures/*.png'))) == 12
 
 blocked = {'.exe', '.dll', '.pdb', '.wav', '.onnx', '.safetensors', '.gguf', '.pt', '.pth', '.bin', '.glb', '.mp4'}
 secret_patterns = [
@@ -76,4 +82,5 @@ assert 'BRUTAL License v1.0' in (ROOT / 'LICENSES/BRUTAL/LICENSE.txt').read_text
 assert '2024 Ahwoo Limited' in (ROOT / 'NOTICE.txt').read_text(encoding='utf-8')
 assert 'gaia/issues/257' in (ROOT / 'README.md').read_text(encoding='utf-8')
 assert '11.0.0-preview.5.26302.115' in (ROOT / 'README.md').read_text(encoding='utf-8')
-print(f'PASS: {len(files)} source/licence/document files; 4 projects; 8 textures; all included blobs verified; 20 excluded assets absent; no GA references or secret-pattern matches.')
+excluded = sum(not row['included'] for row in provenance['files'])
+print(f'PASS: {len(files)} source/licence/document files; 6 projects; 12 textures; all included blobs verified; {excluded} excluded assets absent; no GA references or secret-pattern matches.')
