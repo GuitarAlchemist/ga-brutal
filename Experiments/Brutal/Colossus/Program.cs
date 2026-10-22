@@ -89,7 +89,8 @@ internal struct Drawn(SN.Matrix4x4 model, SN.Vector4 color, SN.Vector4 extra = d
 }
 
 // Both passes' constants: the scene's view-projection or the sky's inverse, the eye and the time, the sun's direction and
-// the exposure, then the bloom.
+// the exposure, then the bloom; and the city's signal: its alarm (0 to 1) and how far from the face its blackout has
+// spread, in metres.
 [StructLayout(LayoutKind.Sequential)]
 internal struct Push
 {
@@ -97,6 +98,7 @@ internal struct Push
     public SN.Vector4 Eye;
     public SN.Vector4 Sun;
     public SN.Vector4 Params;
+    public SN.Vector4 City;
 }
 
 // What DLSS adds to the scene's constants, after them: the previous frame's view-projection, without jitter, and this
@@ -108,7 +110,7 @@ internal struct MotionPush
     public SN.Vector4 Jitter;
 }
 
-internal static unsafe class Colossus
+internal static unsafe partial class Colossus
 {
     private const int Width = 1600;
     private const int Height = 900;
@@ -142,9 +144,18 @@ internal static unsafe class Colossus
     private const string PiperVoice = "Piper, SIWIS (CC BY 4.0)";
 
     // The cinematic: shots cut hard one to the next, each a slow move between two framings with its own focal length and
-    // a little handheld sway, over two of the swarm's 32-second cycles; time 0 is 3 s before the face forms. Three of
+    // a little handheld sway, over two of the swarm's 32-second cycles; time 0 is 3 s before the face forms, so the
+    // kraken stands from 21 to 29 s and from 53 to 61 s. A shot may also orbit what it looks at (Arc) instead of moving in
+    // a straight line, change its focal length as it moves (FovEnd: a push in that widens is a dolly zoom, the subject
+    // holding its size while the world behind it swells), and lean the horizon (Roll to RollEnd, in degrees). Three of
     // them are remade around towers of the city once it is built (DirectedShots).
-    private readonly record struct Shot(double Start, SN.Vector3 EyeFrom, SN.Vector3 EyeTo, SN.Vector3 LookFrom, SN.Vector3 LookTo, float Fov, float Sway);
+    private readonly record struct Shot(double Start, SN.Vector3 EyeFrom, SN.Vector3 EyeTo, SN.Vector3 LookFrom, SN.Vector3 LookTo, float Fov, float Sway, float FovEnd = 0f, float Roll = 0f, float RollEnd = 0f, bool Arc = false);
+
+    // Where the kraken's eyes are, about, while it stands: its block is centred on the face's centre, and turns a little.
+    private static readonly SN.Vector3 KrakenEyes = new(0f, 19.5f, -1f);
+
+    // The indices of the shots that DirectedShots remakes round towers.
+    private const int GlassShot = 0, ConcreteShot = 7, BronzeShot = 10;
 
     private static Shot[] Shots =
     [
@@ -152,14 +163,16 @@ internal static unsafe class Colossus
         new(0.0, new(-170f, 175f, 210f), new(-125f, 140f, 155f), new(0f, 30f, 0f), new(0f, 26f, 0f), 45f, 0.15f),
         // Low behind the figure, looking up as the face forms.
         new(4.0, new(2.2f, 1.1f, 47f), new(1.5f, 1.4f, 44.5f), FaceCenter + new SN.Vector3(0f, 4f, 0f), FaceCenter, 46f, 0.03f),
-        // The face from below and to the left.
-        new(8.5, FaceCenter + new SN.Vector3(-18f, -16f, 28f), FaceCenter + new SN.Vector3(-13f, -14f, 24f), FaceCenter + new SN.Vector3(0f, 1f, 0f), FaceCenter + new SN.Vector3(0f, 2f, 0f), 30f, 0.08f),
-        // Round the head.
-        new(12.5, FaceCenter + new SN.Vector3(52f, 4f, 30f), FaceCenter + new SN.Vector3(-36f, 8f, 50f), FaceCenter, FaceCenter, 36f, 0.05f),
-        // The eyes.
-        new(17.0, FaceCenter + new SN.Vector3(5f, 6f, 54f), FaceCenter + new SN.Vector3(2f, 5f, 46f), FaceCenter + new SN.Vector3(0f, 4f, 0f), FaceCenter + new SN.Vector3(0f, 4f, 0f), 20f, 0.04f),
+        // The face from below and to the left, the horizon leaning.
+        new(8.5, FaceCenter + new SN.Vector3(-18f, -16f, 28f), FaceCenter + new SN.Vector3(-13f, -14f, 24f), FaceCenter + new SN.Vector3(0f, 1f, 0f), FaceCenter + new SN.Vector3(0f, 2f, 0f), 30f, 0.08f, Roll: 7f, RollEnd: 3f),
+        // Round the head, banking like a drone.
+        new(12.5, FaceCenter + new SN.Vector3(52f, 4f, 30f), FaceCenter + new SN.Vector3(-36f, 8f, 50f), FaceCenter, FaceCenter, 36f, 0.05f, Roll: -4f, RollEnd: 4f, Arc: true),
+        // The eyes, in a dolly zoom: the camera pushes in as the lens widens.
+        new(17.0, FaceCenter + new SN.Vector3(5f, 6f, 54f), FaceCenter + new SN.Vector3(2f, 5f, 30f), FaceCenter + new SN.Vector3(0f, 4f, 0f), FaceCenter + new SN.Vector3(0f, 4f, 0f), 20f, 0.04f, FovEnd: 35f),
         // A crane back and up from the figure as the swarm lets go.
-        new(21.0, new(1.5f, 2f, 46f), new(-25f, 40f, 110f), FaceCenter, new(0f, 26f, 0f), 44f, 0.06f),
+        new(21.0, new(1.5f, 2f, 46f), new(-12f, 20f, 78f), FaceCenter, new(0f, 26f, 0f), 44f, 0.06f),
+        // The kraken, from the level of its sea, on a wide lens, looking up at it as it stands, the horizon leaning.
+        new(23.5, new(8f, 11f, 36f), new(5f, 12f, 27f), new(0f, 26f, -4f), new(0f, 22f, -3f), 58f, 0.05f, FovEnd: 52f, Roll: -6f, RollEnd: -2f),
         // Down in the street among the towers.
         new(27.0, new(-48f, 3f, 52f), new(-30f, 4f, 46f), new(0f, 30f, 0f), new(0f, 24f, 0f), 36f, 0.08f),
         // High above as it gathers again.
@@ -168,15 +181,38 @@ internal static unsafe class Colossus
         new(37.5, new(-2.2f, 2.3f, 46f), new(-1.6f, 2f, 44.5f), FaceCenter + new SN.Vector3(0f, 2f, 0f), FaceCenter, 32f, 0.03f),
         // In profile.
         new(43.5, FaceCenter + new SN.Vector3(-34f, 0f, 16f), FaceCenter + new SN.Vector3(-30f, 2f, 10f), FaceCenter, FaceCenter, 40f, 0.05f),
-        // A slow push in, face on.
-        new(49.5, FaceCenter + new SN.Vector3(0f, 2f, 62f), FaceCenter + new SN.Vector3(0f, 3f, 36f), FaceCenter + new SN.Vector3(0f, 2f, 0f), FaceCenter + new SN.Vector3(0f, 3f, 0f), 30f, 0.03f),
+        // A push in, face on, in a dolly zoom.
+        new(49.5, FaceCenter + new SN.Vector3(0f, 2f, 62f), FaceCenter + new SN.Vector3(0f, 3f, 34f), FaceCenter + new SN.Vector3(0f, 2f, 0f), FaceCenter + new SN.Vector3(0f, 3f, 0f), 22f, 0.03f, FovEnd: 39f),
+        // Round the kraken as it stands, past the ship in its coils, banking.
+        new(53.5, new(40f, 30f, 26f), new(-45f, 36f, 21f), new(0f, 24f, -4f), new(0f, 22f, -4f), 40f, 0.05f, Roll: 3f, RollEnd: -5f, Arc: true),
+        // One of its eyes, in a dolly zoom, until the swarm lets go.
+        new(58.0, KrakenEyes + new SN.Vector3(-10f, 1f, 31f), KrakenEyes + new SN.Vector3(-6f, 0.5f, 17f), KrakenEyes + new SN.Vector3(-4f, 0f, 0f), KrakenEyes + new SN.Vector3(-4f, 0f, 0f), 26f, 0.04f, FovEnd: 44f, Roll: 4f, RollEnd: 0f),
         // A last crane up and away.
-        new(56.0, new(0f, 5f, 58f), new(0f, 75f, 150f), new(0f, 24f, 0f), new(0f, 30f, 0f), 50f, 0.08f),
+        new(61.0, new(-10f, 22f, 24f), new(-30f, 62f, 92f), new(0f, 24f, -2f), new(0f, 30f, 0f), 48f, 0.08f),
     ];
 
     private const double CinematicLength = 64.0;
 
-    private static (SN.Vector3 Eye, SN.Vector3 Target, float Fov) Cinematic(double time)
+    // Where a shot's camera is at s (0 to 1, eased): along a straight line, or for an arc, round the vertical axis
+    // through what it looks at, its angle, distance and height each going from the first framing to the last, the short
+    // way round.
+    private static SN.Vector3 EyeAt(in Shot shot, float s)
+    {
+        if (!shot.Arc)
+        {
+            return SN.Vector3.Lerp(shot.EyeFrom, shot.EyeTo, s);
+        }
+
+        var (a, b) = (shot.EyeFrom - shot.LookFrom, shot.EyeTo - shot.LookTo);
+        var from = MathF.Atan2(a.X, a.Z);
+        var turn = MathF.Atan2(b.X, b.Z) - from;
+        turn -= MathF.Tau * MathF.Round(turn / MathF.Tau);
+        var angle = from + (turn * s);
+        var radius = float.Lerp(new SN.Vector2(a.X, a.Z).Length(), new SN.Vector2(b.X, b.Z).Length(), s);
+        return SN.Vector3.Lerp(shot.LookFrom, shot.LookTo, s) + new SN.Vector3(radius * MathF.Sin(angle), float.Lerp(a.Y, b.Y, s), radius * MathF.Cos(angle));
+    }
+
+    private static (SN.Vector3 Eye, SN.Vector3 Target, float Fov, float Roll) Cinematic(double time)
     {
         var t = ((time % CinematicLength) + CinematicLength) % CinematicLength;
         var k = Shots.Length - 1;
@@ -195,11 +231,14 @@ internal static unsafe class Colossus
             MathF.Sin(w * 1.3f) + (0.5f * MathF.Sin((w * 2.9f) + 1f)),
             MathF.Sin((w * 1.7f) + 2f) + (0.4f * MathF.Sin(w * 3.7f)),
             MathF.Sin((w * 1.1f) + 4f)) * shot.Sway;
-        var eye = SN.Vector3.Lerp(shot.EyeFrom, shot.EyeTo, s) + sway;
+        var eye = EyeAt(shot, s) + sway;
         var target = SN.Vector3.Lerp(shot.LookFrom, shot.LookTo, s) + (sway * 0.5f);
-        return (eye, target, shot.Fov);
+        // A dolly zoom keeps its subject's size: the tangent of half the angle of view grows as the distance shrinks.
+        var fov = shot.FovEnd > 0f
+            ? 2f * MathF.Atan(float.Lerp(MathF.Tan(shot.Fov * MathF.PI / 360f), MathF.Tan(shot.FovEnd * MathF.PI / 360f), s)) * 180f / MathF.PI
+            : shot.Fov;
+        return (eye, target, fov, float.Lerp(shot.Roll, shot.RollEnd, s));
     }
-
     // A modelled tower's style, as the scene's shader picks it from its seed (surface): glass walls under 0.3, bronze
     // under 0.375, steel under 0.45, raw concrete under 0.8, the facade texture's panels above.
     private static float Style(float seed) => seed * 7.13f % 1f;
@@ -222,6 +261,7 @@ internal static unsafe class Colossus
         // Clear of a tower: above it, or outside the circle round its footprint, with 3 m to spare.
         bool Clear(SN.Vector3 p) => placed.All(t => p.Y > t.Top + 3f || SN.Vector2.Distance(new(p.X, p.Z), new(t.Center.X, t.Center.Z)) > (t.Half * 1.42f) + 3f);
         bool PathClear(SN.Vector3 a, SN.Vector3 b) => Enumerable.Range(0, 9).All(i => Clear(SN.Vector3.Lerp(a, b, i / 8f)));
+        bool ShotClear(Shot s) => Enumerable.Range(0, 17).All(i => Clear(EyeAt(s, i / 16f)));
         var face = new SN.Vector3(FaceCenter.X, 0f, FaceCenter.Z);
         var cast = new List<(int Tower, float Seed)>();
 
@@ -245,16 +285,16 @@ internal static unsafe class Colossus
         var result = shots.ToArray();
         // 0: up the foot of a glass curtain wall, looking high up it, then down to the swarm as it gathers. Seed 0.4418
         // is the glass style (0.15).
-        result[0] = Cast(40f, 0.4418f, (c, half, top, toFace, across) =>
+        result[GlassShot] = Cast(40f, 0.4418f, (c, half, top, toFace, across) =>
         {
             var from = c + (across * ((half * 1.42f) + 5f)) + (toFace * half * 0.3f) + new SN.Vector3(0f, -24f, 0f);
             var to = from + (toFace * 8f) + new SN.Vector3(0f, 12f, 0f);
-            return PathClear(from, to) ? new Shot(shots[0].Start, from, to, c + (toFace * half * 0.3f) + new SN.Vector3(0f, top * 0.8f, 0f), FaceCenter, 55f, 0.05f) : null;
-        }) ?? shots[0];
-        // 6: behind a concrete tower that hides the face, tracking sideways until the face shows past its edge; at the
+            return PathClear(from, to) ? new Shot(shots[GlassShot].Start, from, to, c + (toFace * half * 0.3f) + new SN.Vector3(0f, top * 0.8f, 0f), FaceCenter, 55f, 0.05f) : null;
+        }) ?? shots[GlassShot];
+        // 7: behind a concrete tower that hides the face, tracking sideways until the face shows past its edge; at the
         // face's height, or higher to pass over the towers around, as long as the tower still rises 20 m above the
         // camera. Seed 0.505 is raw concrete (0.6).
-        result[6] = Cast(FaceCenter.Y + FaceB, 0.505f, (c, half, top, toFace, across) =>
+        result[ConcreteShot] = Cast(FaceCenter.Y + FaceB, 0.505f, (c, half, top, toFace, across) =>
         {
             foreach (var height in new[] { FaceCenter.Y, FaceCenter.Y + 14f, FaceCenter.Y + 28f })
             {
@@ -263,21 +303,21 @@ internal static unsafe class Colossus
                 var to = back + (across * ((half * 2.2f) + 14f));
                 if (top > height + 20f && PathClear(from, to))
                 {
-                    return new Shot(shots[6].Start, from, to, FaceCenter, FaceCenter + new SN.Vector3(0f, 2f, 0f), 34f, 0.04f);
+                    return new Shot(shots[ConcreteShot].Start, from, to, FaceCenter, FaceCenter + new SN.Vector3(0f, 2f, 0f), 34f, 0.04f);
                 }
             }
 
             return null;
-        }) ?? shots[6];
-        // 9: beside bronze cladding, panning from the tower's upper corner to the face. Seed 0.4684 is bronze (0.34).
-        result[9] = Cast(FaceCenter.Y + 10f, 0.4684f, (c, half, top, toFace, across) =>
+        }) ?? shots[ConcreteShot];
+        // 10: beside bronze cladding, panning from the tower's upper corner to the face. Seed 0.4684 is bronze (0.34).
+        result[BronzeShot] = Cast(FaceCenter.Y + 10f, 0.4684f, (c, half, top, toFace, across) =>
         {
             var side = c + (across * ((half * 1.42f) + 4f));
             var from = side - (toFace * half * 0.8f) + new SN.Vector3(0f, 8f, 0f);
             var to = side + (toFace * half * 0.6f) + new SN.Vector3(0f, 14f, 0f);
             var corner = c + (toFace * half) + new SN.Vector3(0f, MathF.Min(top - 4f, FaceCenter.Y + 10f), 0f);
-            return PathClear(from, to) ? new Shot(shots[9].Start, from, to, corner, FaceCenter, 45f, 0.05f) : null;
-        }) ?? shots[9];
+            return PathClear(from, to) ? new Shot(shots[BronzeShot].Start, from, to, corner, FaceCenter, 45f, 0.05f) : null;
+        }) ?? shots[BronzeShot];
         Console.WriteLine($"CINEMATIC towers cast: {string.Join(", ", cast.Select(c => $"{c.Tower} at {placed[c.Tower].Center} as {Style(c.Seed):0.00}"))}");
 
         // Any other shot whose move would pass through a tower moves in toward what it looks at until it is clear, or
@@ -285,14 +325,14 @@ internal static unsafe class Colossus
         for (var i = 0; i < result.Length; i++)
         {
             var s = result[i];
-            if (PathClear(s.EyeFrom, s.EyeTo))
+            if (ShotClear(s))
             {
                 continue;
             }
 
             var moved = Enumerable.Range(1, 7).Select(k => s with { EyeFrom = SN.Vector3.Lerp(s.EyeFrom, s.LookFrom, k / 10f), EyeTo = SN.Vector3.Lerp(s.EyeTo, s.LookTo, k / 10f) })
                 .Concat(Enumerable.Range(1, 8).Select(k => s with { EyeFrom = s.EyeFrom + new SN.Vector3(0f, k * 10f, 0f), EyeTo = s.EyeTo + new SN.Vector3(0f, k * 10f, 0f) }))
-                .FirstOrDefault(m => PathClear(m.EyeFrom, m.EyeTo), s);
+                .FirstOrDefault(ShotClear, s);
             Console.WriteLine($"CINEMATIC shot {i} at {s.Start} s passed through a tower: {(moved == s ? "left as it is" : $"now from {moved.EyeFrom} to {moved.EyeTo}")}");
             result[i] = moved;
         }
@@ -373,40 +413,156 @@ internal static unsafe class Colossus
             f = f * f * (3.0 - 2.0 * f);
             return mix(mix(hash12(i), hash12(i + vec2(1.0, 0.0)), f.x), mix(hash12(i + vec2(0.0, 1.0)), hash12(i + vec2(1.0, 1.0)), f.x), f.y);
         }
+        // The night's rain (0 to 1) and its lightning, which each main sets from the city's signal: a flash every 9 s,
+        // at its own moment in each 9 s, a stroke and its return.
+        float Rain = 0.0;
+        float Flash = 0.0;
+        float flashAt(float t)
+        {
+            float k = floor(t / 9.0);
+            float at = t - k * 9.0 - hash12(vec2(k, 3.7)) * 6.0;
+            return at < 0.0 ? 0.0 : exp(-at * 14.0) + 0.7 * step(0.16, at) * exp(-(at - 0.16) * 10.0);
+        }
+        // The flash's bolt, at its own bearing: a jagged stroke from the clouds down to the horizon, about 4 mrad wide.
+        float bolt(vec3 d, float t)
+        {
+            if (d.y < 0.0 || d.y > 0.45)
+            {
+                return 0.0;
+            }
+
+            float k = floor(t / 9.0);
+            float off = atan(d.z, d.x) - hash12(vec2(k, 11.3)) * 6.2831853
+                - (noise(vec2(d.y * 18.0, k)) - 0.5) * 0.12 - (noise(vec2(d.y * 70.0, k + 5.0)) - 0.5) * 0.03;
+            off = mod(off + 3.14159265, 6.2831853) - 3.14159265;
+            return exp(-off * off / 0.000012) * smoothstep(0.45, 0.3, d.y);
+        }
         // How far night has fallen: 0 with the sun where it usually hangs, low over the city; 1 once it has set.
         float nightOf(vec3 sun)
         {
             return 1.0 - smoothstep(-0.10, 0.18, sun.y);
+        }
+        // The moon: high behind the face and to its left, so that at night it outlines the swarm against the sky.
+        const vec3 MoonDir = vec3(-0.4209, 0.6414, -0.6414);
+        const vec3 MoonColor = vec3(0.42, 0.52, 0.80) * 0.12;
+        // Its disc, a little larger than the real one, with darker seas; without the halo, which is the sky's.
+        vec3 moonDisc(vec3 d)
+        {
+            float m = dot(d, MoonDir);
+            if (m < 0.9998)
+            {
+                return vec3(0.0);
+            }
+
+            vec3 mx = normalize(cross(MoonDir, vec3(0.0, 1.0, 0.0)));
+            vec2 on = vec2(dot(d, mx), dot(d, cross(mx, MoonDir))) / 0.012;
+            float seas = smoothstep(0.45, 0.75, noise(on * 2.3 + 7.0)) * 0.35 + noise(on * 7.0) * 0.12;
+            return vec3(0.86, 0.89, 0.96) * 2.4 * (1.0 - seas) * smoothstep(0.99991, 0.99994, m);
         }
         vec3 sky(vec3 d, vec3 sun, float t)
         {
             float night = nightOf(sun);
             float day = 1.0 - night;
             float h = d.y;
-            // At night the horizon cools to violet and the zenith to deep blue; the abyss below keeps its glow.
-            vec3 horizon = mix(vec3(0.50, 0.22, 0.07), vec3(0.07, 0.045, 0.10), night);
+            // At night the horizon cools to a deep blue, warmed near the ground by the city's lights, and the zenith
+            // darkens further; the abyss below dims to an ember.
+            vec3 horizon = mix(vec3(0.50, 0.22, 0.07), vec3(0.016, 0.024, 0.052) + vec3(0.032, 0.022, 0.018) * exp(-max(h, 0.0) * 9.0), night);
             vec3 c = h >= 0.0
-                ? mix(horizon, mix(vec3(0.010, 0.008, 0.014), vec3(0.003, 0.004, 0.012), night), pow(clamp(h, 0.0, 1.0), 0.42))
-                : mix(horizon, vec3(0.12, 0.05, 0.018), pow(clamp(-h, 0.0, 1.0), 0.35));
+                ? mix(horizon, mix(vec3(0.010, 0.008, 0.014), vec3(0.0015, 0.003, 0.010), night), pow(clamp(h, 0.0, 1.0), 0.42))
+                : mix(horizon, mix(vec3(0.12, 0.05, 0.018), vec3(0.022, 0.012, 0.014), night), pow(clamp(-h, 0.0, 1.0), 0.35));
             vec2 q = d.xz / (abs(h) + 0.18);
             float smog = noise(q * 1.7 + vec2(t * 0.01, 0.0)) * 0.6 + noise(q * 4.3 - vec2(0.0, t * 0.015)) * 0.4;
             float band = smoothstep(0.35, 0.8, smog) * exp(-abs(h) * 5.0);
             float s = max(dot(d, sun), 0.0);
             c = mix(c, c * 0.45, band * 0.7) + vec3(1.0, 0.45, 0.15) * band * pow(s, 4.0) * 0.6 * day;
-            c += vec3(1.0, 0.52, 0.2) * (pow(s, 5.0) * 0.55 * (1.0 - 0.6 * night) + pow(s, 48.0) * 1.6 * day);
+            c += vec3(1.0, 0.52, 0.2) * (pow(s, 5.0) * 0.55 * (1.0 - 0.85 * night) + pow(s, 48.0) * 1.6 * day);
             c += vec3(1.0, 0.86, 0.66) * smoothstep(0.99965, 0.9999, s) * 40.0 * day;
-            // Stars, where the smog is thin, a few of them brighter, each twinkling at its own pace.
+            // The lightning lights the smog from within, and its bolt.
+            c += vec3(0.55, 0.6, 0.85) * Flash * ((0.06 + band * 0.5) * smoothstep(-0.1, 0.3, h) + bolt(d, t) * 8.0);
             if (night > 0.0 && h > 0.0)
             {
+                // The rain's clouds hide most of the stars and the moon.
+                float clear = night * smoothstep(0.04, 0.25, h) * (1.0 - band) * (1.0 - 0.85 * Rain);
+                // The Milky Way: a faint, uneven band across the sky, thick with small stars.
+                float across = dot(d, vec3(0.30, 0.55, 0.78));
+                float milky = exp(-across * across * 30.0) * (0.45 + 0.55 * noise(d.xz / (h + 0.3) * 6.0 + across * 9.0));
+                c += vec3(0.020, 0.022, 0.032) * milky * clear;
+                // Stars, where the smog is thin, a few of them brighter, each twinkling at its own pace.
                 vec2 g = d.xz / (h + 0.3) * 260.0;
                 vec2 cell = floor(g);
                 float r = hash12(cell);
                 vec2 at = fract(g) - 0.5 - (vec2(hash12(cell + 17.0), hash12(cell + 31.0)) - 0.5) * 0.6;
-                float star = step(0.975, r) * smoothstep(0.2, 0.0, length(at)) * (0.3 + 28.0 * (r - 0.975)) * (0.65 + 0.35 * sin(t * 1.7 + r * 90.0));
-                c += vec3(0.75, 0.82, 1.0) * star * night * smoothstep(0.04, 0.25, h) * (1.0 - band) * 0.5;
+                float star = step(0.97 - 0.03 * milky, r) * smoothstep(0.32, 0.0, length(at)) * 0.45 * (0.3 + 28.0 * max(r - 0.975, 0.0)) * (0.65 + 0.35 * sin(t * 1.7 + r * 90.0));
+                c += vec3(0.75, 0.82, 1.0) * star * clear * 0.9;
+                // The moon's halo in the haze, and its disc.
+                float m = max(dot(d, MoonDir), 0.0);
+                c += (vec3(0.30, 0.36, 0.50) * pow(m, 900.0) * 0.5 + vec3(0.05, 0.07, 0.11) * pow(m, 40.0) * 0.4) * night * (1.0 - 0.7 * Rain);
+                c += moonDisc(d) * night * (1.0 - 0.85 * Rain);
             }
 
             return c;
+        }
+        // The searchlights that sweep the kraken while the city's alarm sounds (alarm, 0 to 1): four, about 50 m out on its
+        // flanks and behind it, clear of the walkway where most shots stand, each a beam that widens as it goes and fades
+        // into the haze.
+        const vec3 BeamColor = vec3(1.0, 0.9, 0.72);
+        vec3 beamFrom(int i)
+        {
+            return vec3(i % 2 == 0 ? -1.0 : 1.0, 0.0, 0.0) * (i < 2 ? 50.0 : 36.0) + vec3(0.0, 0.6, i < 2 ? 14.0 : -40.0);
+        }
+        vec3 beamDir(int i, float t)
+        {
+            float k = float(i);
+            vec3 aim = vec3(10.0 * sin(t * 0.37 + k * 1.9), 27.0 + 7.0 * sin(t * 0.29 + k * 2.7), -2.0 + 8.0 * cos(t * 0.31 + k * 1.3));
+            return normalize(aim - beamFrom(i));
+        }
+        // The light the beams scatter toward the eye along a ray from e in direction d, up to far metres: from each, where
+        // the ray passes closest to its axis, a Gaussian as wide as the beam there, stronger as the ray runs along it, up
+        // to three times, so that a camera inside a beam is not blinded.
+        vec3 beams(vec3 e, vec3 d, float far, float t, float alarm)
+        {
+            if (alarm <= 0.0)
+            {
+                return vec3(0.0);
+            }
+
+            float sum = 0.0;
+            for (int i = 0; i < 4; i++)
+            {
+                vec3 o = beamFrom(i);
+                vec3 b = beamDir(i, t);
+                vec3 w0 = e - o;
+                float bd = dot(b, d);
+                float sin2 = max(1.0 - bd * bd, 1e-4);
+                float u = clamp((bd * dot(b, w0) - dot(d, w0)) / sin2, 0.0, far);
+                vec3 q = e + d * u - o;
+                float s = max(dot(q, b), 0.0);
+                float r = length(q - b * s);
+                float w = 0.6 + 0.025 * s;
+                sum += exp(-r * r / (w * w)) * w * min(inversesqrt(sin2), 3.0) * exp(-s * 0.005) * exp(-u * 0.002);
+            }
+
+            return BeamColor * 0.016 * alarm * sum;
+        }
+        // How much of the beams' light falls on a surface at p facing n: a pool as wide as the beam where it lands.
+        float spot(vec3 p, vec3 n, float t, float alarm)
+        {
+            if (alarm <= 0.0)
+            {
+                return 0.0;
+            }
+
+            float sum = 0.0;
+            for (int i = 0; i < 4; i++)
+            {
+                vec3 b = beamDir(i, t);
+                vec3 q = p - beamFrom(i);
+                float s = dot(q, b);
+                float w = 0.6 + 0.025 * s;
+                sum += s > 0.0 ? smoothstep(w, 0.6 * w, length(q - b * s)) * max(dot(n, -b), 0.0) * exp(-s * 0.005) : 0.0;
+            }
+
+            return sum * alarm;
         }
 
         """;
@@ -428,11 +584,11 @@ internal static unsafe class Colossus
         layout(location = 10) in vec4 pModel1;
         layout(location = 11) in vec4 pModel2;
         layout(location = 12) in vec4 pModel3;
-        layout(push_constant) uniform Push { mat4 viewProj; vec4 eye; vec4 sun; vec4 params; mat4 prevViewProj; vec4 jitter; } pc;
+        layout(push_constant) uniform Push { mat4 viewProj; vec4 eye; vec4 sun; vec4 params; vec4 city; mat4 prevViewProj; vec4 jitter; } pc;
         layout(location = 10) out vec4 vClip;
         layout(location = 11) out vec4 vPrevClip;
         #else
-        layout(push_constant) uniform Push { mat4 viewProj; vec4 eye; vec4 sun; vec4 params; } pc;
+        layout(push_constant) uniform Push { mat4 viewProj; vec4 eye; vec4 sun; vec4 params; vec4 city; } pc;
         #endif
         layout(location = 0) out vec3 vWorld;
         layout(location = 1) out vec3 vNormal;
@@ -500,7 +656,7 @@ internal static unsafe class Colossus
         #ifdef DLSS
         layout(location = 10) in vec4 vClip;
         layout(location = 11) in vec4 vPrevClip;
-        layout(push_constant) uniform Push { mat4 viewProj; vec4 eye; vec4 sun; vec4 params; mat4 prevViewProj; vec4 jitter; } pc;
+        layout(push_constant) uniform Push { mat4 viewProj; vec4 eye; vec4 sun; vec4 params; vec4 city; mat4 prevViewProj; vec4 jitter; } pc;
         layout(location = 1) out vec4 outMotion;
         #ifdef RR
         layout(location = 2) out vec4 outDiffuse;
@@ -509,12 +665,21 @@ internal static unsafe class Colossus
         layout(location = 5) out float outHit;
         #endif
         #else
-        layout(push_constant) uniform Push { mat4 viewProj; vec4 eye; vec4 sun; vec4 params; } pc;
+        layout(push_constant) uniform Push { mat4 viewProj; vec4 eye; vec4 sun; vec4 params; vec4 city; } pc;
         #endif
         layout(location = 0) out vec4 outColor;
-        // The sun's light, and the night's: main dims the one and turns up the city's glows by the other.
+        // The light that casts shadows, and the night's: main fades the sun out at dusk, then brings the moon in from its
+        // own direction, and turns up the city's glows.
         vec3 SunColor = vec3(1.0, 0.56, 0.26);
+        vec3 LightDir = vec3(0.0, 1.0, 0.0);
         float Night = 0.0;
+        // The city's alarm (0 to 1), and how far its blackout has put out the offices where the surface being shaded is.
+        float Alarm = 0.0;
+        float Dark = 0.0;
+        float darkAt(vec3 p)
+        {
+            return 1.0 - smoothstep(pc.city.y - 30.0, pc.city.y, length(p.xz - vec2(0.0, -2.0)));
+        }
         // How much brighter a glow is at night: three times for lamps, windows and Lego glows; the machines' (kind 1 to
         // 1.4) not at all, so that a block they build keeps its stone.
         float nightGlow(float kind)
@@ -560,7 +725,7 @@ internal static unsafe class Colossus
         // does, so that reflections break from pane to pane. px is a pixel's size in metres: as a cell shrinks under two
         // pixels, the panes fade to their average, so that nothing shimmers far away. f0 is the glass's reflectance head
         // on: mirror glass reflects more and shows less of the offices behind it.
-        Surface curtain(vec2 st, vec3 un, float seed, float floorHeight, float px, float f0)
+        Surface curtain(vec2 st, vec3 un, float seed, float floorHeight, float px, float f0, float t)
         {
             vec2 cell = vec2(st.x / 1.6, st.y / floorHeight);
             vec2 f = fract(cell);
@@ -568,15 +733,23 @@ internal static unsafe class Colossus
             float r = hash12(id);
             float r2 = hash12(id + 17.0);
             float fade = clamp(1.0 - (px / 1.6 - 0.25) * 4.0, 0.0, 1.0);
-            float frame = (1.0 - step(0.05, f.x) * step(f.x, 0.95) * step(0.03, f.y) * step(f.y, 0.8)) * fade;
+            // The mullions and slabs are thin: their edges are filtered over a pixel, or they flicker into moiré as the
+            // camera moves long before the cells fade.
+            vec2 w = vec2(px / 1.6, px / floorHeight) * 0.75;
+            float pane = smoothstep(0.05 - w.x, 0.05 + w.x, f.x) * (1.0 - smoothstep(0.95 - w.x, 0.95 + w.x, f.x))
+                * smoothstep(0.03 - w.y, 0.03 + w.y, f.y) * (1.0 - smoothstep(0.8 - w.y, 0.8 + w.y, f.y));
+            float frame = (1.0 - pane) * fade;
             float blinds = step(0.84, fract(r * 23.7)) * (1.0 - f0);
-            float lit = step(r, 0.07) * (1.0 - f0);
+            // Offices come and go: each pane draws its light again every 25 to 85 s, on its own clock, and a few more are
+            // lit at night. The blackout (Dark) puts them out one by one as it passes.
+            float slot = floor(t / (25.0 + 60.0 * r2) + r * 13.0);
+            float lit = step(hash12(id + slot * 7.31), 0.07 + 0.05 * Night) * step(Dark, r2 * 0.98) * (1.0 - f0);
             vec3 light = fract(r * 9.1) < 0.7 ? mix(vec3(1.0, 0.42, 0.12), vec3(1.0, 0.72, 0.42), fract(r * 5.3)) * 2.0 : vec3(0.7, 0.82, 1.0) * 1.4;
             // An office's light: brightest under its ceiling, dimmer toward its floor and the pane's sides.
             float room = (0.3 + 0.7 * smoothstep(0.0, 0.8, f.y)) * (0.7 + 0.3 * sin(3.14159 * f.x));
             Surface s;
             s.albedo = mix(mix(vec3(0.012, 0.016, 0.02) * (0.7 + 0.6 * r2), vec3(0.11, 0.095, 0.08), blinds * fade), DarkSteel, frame);
-            s.emit = mix(vec3(1.0, 0.56, 0.26) * 0.1 * (1.0 - f0), lit * (1.0 - frame) * light * room, fade);
+            s.emit = mix(vec3(1.0, 0.56, 0.26) * (0.1 + 0.07 * Night) * (1.0 - Dark) * (1.0 - f0), lit * (1.0 - frame) * light * room, fade);
             s.bump = (vec2(r, r2) - 0.5) * 0.05 * fade * (1.0 - frame);
             s.rough = mix(0.04 + 0.06 * r2, 0.35, frame);
             s.f0 = f0;
@@ -644,8 +817,11 @@ internal static unsafe class Colossus
             bool side = abs(un.y) < 0.5;
             if (kind > 0.5 && kind < 1.5)
             {
-                // A machine: its hull, and its eye, which pulses.
-                vec2 uv = st / 1.2 + seed * vec2(7.31, 3.17);
+                // A machine: its hull, its darker pods, an eye over its nose that blinks on its own clock, and thrusters
+                // that burn with its speed, which rides in the seed's whole part (0 to 15).
+                float own = fract(seed);
+                float thrust = floor(seed) / 15.0;
+                vec2 uv = st / 1.2 + own * vec2(7.31, 3.17);
                 vec4 map = tex(uv, 1.0, 1.2, footprint);
                 s.albedo = pow(tex(uv, 0.0, 1.2, footprint).rgb, vec3(2.2)) * 0.45;
                 // Settled on a Lego block (kind 1 to 1.4), the hull takes the box's colour, its grain still showing.
@@ -653,13 +829,33 @@ internal static unsafe class Colossus
                 s.bump = (map.rg * 2.0 - 1.0) * 2.0;
                 s.rough = map.b;
                 s.f0 = 0.15;
-                float eye = (1.0 - smoothstep(0.18, 0.32, length(unit.xy))) * step(0.49, unit.z);
-                s.emit += vec3(1.0, 0.3, 0.06) * eye * (2.5 + 1.5 * sin(t * 6.0 + seed * 40.0));
+                if (mat > 1.5 && mat < 2.5)
+                {
+                    s.albedo *= 0.5;
+                    s.f0 = 0.3;
+                }
+                else if (mat > 2.5 && mat < 3.5)
+                {
+                    float open = step(0.05, fract(t * (0.23 + 0.17 * own) + own * 13.0));
+                    s.albedo = vec3(0.02);
+                    s.emit += vec3(0.45, 0.8, 1.0) * 2.0 * open;
+                }
+                else if (mat > 3.5)
+                {
+                    s.albedo = vec3(0.02);
+                    s.emit += vec3(1.0, 0.3, 0.06) * (0.3 + 4.5 * thrust) * (0.9 + 0.1 * sin(t * 41.0 + own * 90.0));
+                }
             }
             else if (kind > 1.5 && kind < 2.5)
             {
                 // A box tower, when towers.glb is missing: glass on its sides, concrete on its roof.
-                s = side ? curtain(st, un, seed, 3.0, px, 0.2) : concrete(st, seed, footprint, px);
+                s = side ? curtain(st, un, seed, 3.0, px, 0.2, t) : concrete(st, seed, footprint, px);
+            }
+            else if (kind > 2.5 && kind < 3.5 && seed > 0.0)
+            {
+                // A roof's or a crane's warning light: a short flash every 1.4 s or so, on its own clock; while the alarm
+                // sounds, all of them together, twice a second and brighter.
+                s.emit *= mix(step(0.8, fract(t * (0.65 + 0.1 * seed) + seed * 7.0)), 2.0 * step(0.5, fract(t * 2.0)), Alarm);
             }
             else if (kind > 3.5 && kind < 4.5)
             {
@@ -669,11 +865,11 @@ internal static unsafe class Colossus
                 if (mat > 2.5)
                 {
                     s.albedo = vec3(0.0);
-                    s.emit = vec3(1.0, 0.45, 0.12) * (4.0 + 2.0 * sin(t * 2.0 + seed * 31.0));
+                    s.emit = vec3(1.0, 0.45, 0.12) * (4.0 + 2.0 * sin(t * 2.0 + seed * 31.0)) * (1.0 - 0.9 * Dark);
                 }
                 else if ((mat > 0.5 && mat < 1.5) || (side && style < 0.3))
                 {
-                    s = curtain(st, un, seed, 3.2, px, style < 0.3 ? 0.45 : 0.2);
+                    s = curtain(st, un, seed, 3.2, px, style < 0.3 ? 0.45 : 0.2, t);
                 }
                 else if (mat > 1.5 || (side && style < 0.45))
                 {
@@ -867,6 +1063,7 @@ internal static unsafe class Colossus
             vec3 hscale = vec3(length(hit.model[0].xyz), length(hit.model[1].xyz), length(hit.model[2].xyz));
             vec3 hpm = hit.extra.x > 3.5 && hit.extra.x < 4.5 ? hunit : hunit * hscale;
             float foot = footprint + h.d * 0.0012;
+            Dark = darkAt(h.p);
             h.s = surface(hit.extra.x, mesh[at + 6u], hit.color, hit.extra.y, hunit, hpm, boxST(hpm, hun), hun, hscale, foot, foot, t);
             h.s.emit *= nightGlow(hit.extra.x);
             h.n = normalize(hun * mat3(w2o));
@@ -923,13 +1120,13 @@ internal static unsafe class Colossus
                 if (!trace(p + g * 0.04, r, footprint, t, h))
                 {
                     float s2 = max(dot(r, sun), 0.0);
-                    light += weight * (sky(r, sun, t) - vec3(1.0, 0.86, 0.66) * smoothstep(0.99965, 0.9999, s2) * 40.0 * (1.0 - Night));
+                    light += weight * (sky(r, sun, t) - vec3(1.0, 0.86, 0.66) * smoothstep(0.99965, 0.9999, s2) * 40.0 * (1.0 - Night) - moonDisc(r) * Night);
                     break;
                 }
 
                 firstHit = b == 0 && mirror ? h.d : firstHit;
-                float sunOn = max(dot(h.n, sun), 0.0);
-                sunOn = sunOn > 0.0 ? sunOn * sunlit(h.p, h.n, sun) : 0.0;
+                float sunOn = max(dot(h.n, LightDir), 0.0);
+                sunOn = sunOn > 0.0 ? sunOn * sunlit(h.p, h.n, LightDir) : 0.0;
                 float haze = 1.0 - exp(-h.d * 0.0028);
                 light += weight * mix(h.s.albedo * (1.0 - h.s.metal) * SunColor * 1.8 * sunOn + h.s.emit, sky(r, sun, t) * 0.55, haze);
                 weight *= 1.0 - haze;
@@ -953,15 +1150,26 @@ internal static unsafe class Colossus
             vec3 v = toEye / dist;
             vec3 sun = pc.sun.xyz;
             Night = nightOf(sun);
-            SunColor *= 1.0 - Night;
+            // The sun's light is gone by mid-dusk, and only then does the moon's rise, so the shadows never jump.
+            LightDir = Night < 0.55 ? sun : MoonDir;
+            SunColor = Night < 0.55 ? SunColor * (1.0 - smoothstep(0.2, 0.55, Night)) : MoonColor * smoothstep(0.55, 0.9, Night);
             float t = pc.eye.w;
             float kind = vExtra.x;
+            Alarm = pc.city.x;
+            Dark = darkAt(vWorld);
+            Rain = pc.city.z;
+            Flash = flashAt(t) * Rain;
             // Modelled towers map in their own metres, so that window cells keep to the floors at any scale.
             vec3 p = kind > 3.5 && kind < 4.5 ? vUnit : vUnit * vScale;
             vec2 st = boxST(p, vUnitNormal);
             float px = max(max(fwidth(st.x), fwidth(st.y)), 1e-4);
             Surface s = surface(kind, vMaterial, vColor, vExtra.y, vUnit, p, st, vUnitNormal, vScale, -1.0, px, t);
             s.emit *= nightGlow(kind);
+            // In the rain, what faces up is wet: darker, and glossy, more so where puddles gather.
+            float wet = Rain * smoothstep(0.6, 0.9, ng.y) * (0.6 + 0.4 * smoothstep(0.35, 0.6, noise(vWorld.xz * 0.35)));
+            s.albedo *= 1.0 - 0.45 * wet;
+            s.rough = mix(s.rough, 0.06, wet);
+            s.f0 = mix(s.f0, 0.05, wet * (1.0 - s.metal));
             vec3 n = normalize(ng + vTangent * s.bump.x + vBitangent * s.bump.y);
             float mirror = (1.0 - s.rough) * (1.0 - s.rough);
             float fog = 1.0 - exp(-dist * 0.0028);
@@ -983,13 +1191,13 @@ internal static unsafe class Colossus
                 // other's sunlight and the head would read as a silhouette. Rays through the sun's disc, widened to 1.4
                 // degrees by the haze, soften the shadows' edges.
                 uint casters = kind > 0.5 && kind < 1.5 ? 0x01u : 0x05u;
-                vec3 sx = normalize(cross(sun, vec3(0.0, 1.0, 0.0)));
-                vec3 sy = cross(sun, sx);
+                vec3 sx = normalize(cross(LightDir, vec3(0.0, 1.0, 0.0)));
+                vec3 sy = cross(LightDir, sx);
                 shadow = 0.0;
                 for (int i = 0; i < ShadowRays; i++)
                 {
                     float a = 6.2831853 * fract(noise2.x + float(i) / float(ShadowRays));
-                    vec3 d = normalize(sun + (sx * cos(a) + sy * sin(a)) * sqrt(fract(noise2.y + float(i) / float(ShadowRays))) * 0.012);
+                    vec3 d = normalize(LightDir + (sx * cos(a) + sy * sin(a)) * sqrt(fract(noise2.y + float(i) / float(ShadowRays))) * 0.012);
                     rayQueryEXT q;
                     rayQueryInitializeEXT(q, scene, gl_RayFlagsTerminateOnFirstHitEXT | gl_RayFlagsOpaqueEXT, casters, origin, 0.02, d, 800.0);
                     while (rayQueryProceedEXT(q)) {}
@@ -1059,15 +1267,16 @@ internal static unsafe class Colossus
                         vec3 hscale = vec3(length(hit.model[0].xyz), length(hit.model[1].xyz), length(hit.model[2].xyz));
                         vec3 hpm = hit.extra.x > 3.5 && hit.extra.x < 4.5 ? hunit : hunit * hscale;
                         float foot = (dist + d) * 0.0012;
+                        Dark = darkAt(hp);
                         Surface hs = surface(hit.extra.x, mesh[at + 6u], hit.color, hit.extra.y, hunit, hpm, boxST(hpm, hun), hun, hscale, foot, foot, t);
                         hs.emit *= nightGlow(hit.extra.x);
                         vec3 hn = normalize(hun * mat3(w2o));
                         hn = dot(hn, r) > 0.0 ? -hn : hn;
-                        float hl = max(dot(hn, sun), 0.0);
+                        float hl = max(dot(hn, LightDir), 0.0);
                         if (hl > 0.0)
                         {
                             rayQueryEXT q;
-                            rayQueryInitializeEXT(q, scene, gl_RayFlagsTerminateOnFirstHitEXT | gl_RayFlagsOpaqueEXT, 0x05u, hp + hn * 0.05, 0.02, sun, 800.0);
+                            rayQueryInitializeEXT(q, scene, gl_RayFlagsTerminateOnFirstHitEXT | gl_RayFlagsOpaqueEXT, 0x05u, hp + hn * 0.05, 0.02, LightDir, 800.0);
                             while (rayQueryProceedEXT(q)) {}
                             hl = rayQueryGetIntersectionTypeEXT(q, true) == gl_RayQueryCommittedIntersectionNoneEXT ? hl : 0.0;
                         }
@@ -1085,19 +1294,19 @@ internal static unsafe class Colossus
 
             // The sun's GGX highlight and the reflection, weighed by Schlick's Fresnel; the reflection of a rough surface
             // fades to the ambient light. Metals reflect their colour and are not diffuse.
-            float ndl = max(dot(n, sun), 0.0) * shadow;
+            float ndl = max(dot(n, LightDir), 0.0) * shadow;
             float nv = max(dot(n, v), 1e-3);
             vec3 f0 = mix(vec3(s.f0), s.albedo, s.metal);
             vec3 fresnel = f0 + (1.0 - f0) * pow(1.0 - nv, 5.0);
-            vec3 h = normalize(sun + v);
+            vec3 h = normalize(LightDir + v);
             float a2 = pow(max(s.rough * s.rough, 0.03), 2.0);
             float nh = max(dot(n, h), 0.0);
-            float lh = max(dot(sun, h), 0.1);
+            float lh = max(dot(LightDir, h), 0.1);
             float dd = nh * nh * (a2 - 1.0) + 1.0;
             vec3 spec = SunColor * 1.8 * (a2 / (3.14159 * dd * dd)) * 0.25 / (lh * lh) * (f0 + (1.0 - f0) * pow(1.0 - lh, 5.0)) * ndl;
             vec3 ambient = skylight(n) * ao;
             vec3 fill = vec3(0.2, 0.25, 0.38) * (1.0 - 0.6 * Night) * max(dot(n, normalize(vec3(-0.3, 0.45, 1.0))), 0.0) * ao;
-            float back = pow(1.0 - nv, 4.0) * pow(max(dot(-v, sun), 0.0), 3.0);
+            float back = pow(1.0 - nv, 4.0) * pow(max(dot(-v, LightDir), 0.0), 3.0);
             vec3 reflected = traced.x >= 0.0 ? traced : sky(mirrored, sun, t);
             vec3 env = fresnel * mix(ambient * 2.0, reflected, mirror);
             // Path traced, the paths bring all the light but the sun's, and its highlight.
@@ -1105,7 +1314,12 @@ internal static unsafe class Colossus
                 ? s.albedo * (1.0 - s.metal) * (1.0 - fresnel) * SunColor * 1.8 * ndl + spec + indirect + s.emit
                 : s.albedo * (1.0 - s.metal) * (1.0 - fresnel) * (ambient + fill + SunColor * 1.8 * ndl) + spec + env
                     + SunColor * back * 1.4 * (0.6 + 0.4 * shadow) + s.emit;
+            // The searchlights' pools on what they sweep, and the light their beams scatter in front of it.
+            c += s.albedo * (1.0 - s.metal) * BeamColor * 0.9 * spot(vWorld, n, t, Alarm);
+            // The lightning's light, from the whole sky.
+            c += s.albedo * (1.0 - s.metal) * vec3(0.55, 0.6, 0.85) * Flash * (0.4 + 0.3 * n.y);
             c = mix(c, sky(-v, sun, t) * 0.55, fog);
+            c += beams(pc.eye.xyz, -v, dist, t, Alarm);
             outColor = vec4(c, 1.0);
             #ifdef DLSS
             // Where this point was on screen in the previous frame, from where it is now, in UV units.
@@ -1129,7 +1343,7 @@ internal static unsafe class Colossus
     // direction at infinity moves on screen with the camera's turn alone.
     private const string SkyMotionVertexShader = """
         #version 450
-        layout(push_constant) uniform Push { mat4 viewProj; vec4 eye; vec4 sun; vec4 params; mat4 prevViewProj; vec4 jitter; } pc;
+        layout(push_constant) uniform Push { mat4 viewProj; vec4 eye; vec4 sun; vec4 params; vec4 city; mat4 prevViewProj; vec4 jitter; } pc;
         layout(location = 0) out vec3 vNear;
         layout(location = 1) out vec2 vNdc;
         void main()
@@ -1143,7 +1357,7 @@ internal static unsafe class Colossus
         """;
 
     private const string SkyMotionFragmentShader = "#version 450\n" + SkyGlsl + """
-        layout(push_constant) uniform Push { mat4 viewProj; vec4 eye; vec4 sun; vec4 params; mat4 prevViewProj; vec4 jitter; } pc;
+        layout(push_constant) uniform Push { mat4 viewProj; vec4 eye; vec4 sun; vec4 params; vec4 city; mat4 prevViewProj; vec4 jitter; } pc;
         layout(location = 0) in vec3 vNear;
         layout(location = 1) in vec2 vNdc;
         layout(location = 0) out vec4 outColor;
@@ -1157,9 +1371,11 @@ internal static unsafe class Colossus
         void main()
         {
             vec3 dir = normalize(vNear - pc.eye.xyz);
+            Rain = pc.city.z;
+            Flash = flashAt(pc.eye.w) * Rain;
             vec4 prev = pc.prevViewProj * vec4(dir, 0.0);
             prev.w = abs(prev.w) < 1e-6 ? 1e-6 : prev.w;
-            outColor = vec4(sky(dir, pc.sun.xyz, pc.eye.w), 1.0);
+            outColor = vec4(sky(dir, pc.sun.xyz, pc.eye.w) + beams(pc.eye.xyz, dir, 3000.0, pc.eye.w, pc.city.x), 1.0);
             outMotion = vec4((prev.xy / prev.w - vNdc) * 0.5, 0.0, 0.0);
             #ifdef RR
             // Ray Reconstruction's guides for the sky, as NVIDIA's own renderer gives them: its colour as the diffuse
@@ -1187,7 +1403,7 @@ internal static unsafe class Colossus
     // cool shadows and warm highlights, a vignette, gamma for the UNORM swapchain, and grain against banding. Dear ImGui then draws in the same space.
     private const string CompositeFragmentShader = "#version 450\n" + SkyGlsl + """
         layout(set = 0, binding = 0) uniform sampler2D hdr;
-        layout(push_constant) uniform Push { mat4 invViewProj; vec4 eye; vec4 sun; vec4 params; } pc;
+        layout(push_constant) uniform Push { mat4 invViewProj; vec4 eye; vec4 sun; vec4 params; vec4 city; } pc;
         layout(location = 0) in vec2 vUv;
         layout(location = 0) out vec4 outColor;
         vec3 aces(vec3 x)
@@ -1199,12 +1415,30 @@ internal static unsafe class Colossus
             vec4 base = textureLod(hdr, vUv, 0.0);
             vec4 near = pc.invViewProj * vec4(vUv * 2.0 - 1.0, 1.0, 1.0);
             vec3 dir = normalize(near.xyz / near.w - pc.eye.xyz);
+            Rain = pc.city.z;
+            Flash = flashAt(pc.eye.w) * Rain;
             #ifdef DLSS
             // DLSS's image has the sky already.
             vec3 c = base.rgb;
             #else
-            vec3 c = base.rgb + sky(dir, pc.sun.xyz, pc.eye.w) * (1.0 - base.a);
+            vec3 c = base.rgb + (sky(dir, pc.sun.xyz, pc.eye.w) + beams(pc.eye.xyz, dir, 3000.0, pc.eye.w, pc.city.x)) * (1.0 - base.a);
             #endif
+            // The rain: three layers of faint streaks, each nearer one wider and longer, falling three screens a second,
+            // brighter in a flash.
+            if (Rain > 0.0)
+            {
+                float streaks = 0.0;
+                for (int k = 0; k < 3; k++)
+                {
+                    float z = 1.0 + float(k) * 0.7;
+                    vec2 q = vec2((vUv.x + vUv.y * 0.08) * 220.0 * z, vUv.y * 9.0 * z - pc.eye.w * 27.0);
+                    vec2 f = fract(q);
+                    float r = hash12(floor(q) + float(k) * 31.0);
+                    streaks += step(0.9, r) * smoothstep(0.0, 0.4, f.y) * smoothstep(1.0, 0.7, f.y) * smoothstep(0.3, 0.0, abs(f.x - 0.5)) / z;
+                }
+
+                c += vec3(0.6, 0.65, 0.75) * streaks * Rain * (0.03 + 0.12 * Flash);
+            }
             vec2 texel = 1.0 / vec2(textureSize(hdr, 0));
             vec3 bloom = vec3(0.0);
             for (int k = 1; k < 7; k++)
@@ -1234,12 +1468,13 @@ internal static unsafe class Colossus
     // Two buffers of every body's state: the one drawn, and the one Jolt's worker reads the next step into.
     private static BodyState[] _states = [], _statesBack = [];
     private static SN.Vector3[] _faceP = [], _faceN = [], _dirs = [];
-    private static float[] _eye = [], _mouth = [], _jaw = [], _phase = [], _radius = [], _height = [], _speed = [];
+    private static float[] _eye = [], _mouth = [], _jaw = [], _phase = [], _radius = [], _height = [], _speed = [], _bank = [];
     private static float _memberRadius;
 
     // What the swarm builds between two faces, one a cycle in turn: Lego blocks, each a point a machine on its faces
-    // (centred, in metres, front toward +Z), the face's outward normal, and the box's colour with its glow in W.
-    private static readonly string[] Builds = ["tholos", "temple", "propylon"];
+    // (centred, in metres, front toward +Z), the face's outward normal, and the box's colour with its glow in W. The
+    // temples (tholos, temple, propylon) gave way to the giant robotic kraken, whose arms writhe (Writhe).
+    private static readonly string[] Builds = ["kraken"];
     private static SN.Vector3[][] _buildP = [], _buildN = [];
     private static SN.Vector4[][] _buildC = [];
     private static int _buildGeneration;
@@ -2037,11 +2272,13 @@ internal static unsafe class Colossus
             lastFrame = new Drawn[MaxInstances];
         }
 
-        // One cube, then the modelled towers, and per frame in flight an instance buffer that stays mapped.
+        // One cube, then the modelled towers and the machine, and per frame in flight an instance buffer that stays mapped.
         var cube = new List<MeshVertex>();
         Cube(cube);
         var cubeCount = cube.Count;
         var towerVariants = LoadTowers(Path.Combine(AppContext.BaseDirectory, "city", "towers.glb"), cube);
+        var machine = Machine(cube);
+        var machineMesh = towerVariants.Length + 1;
         var meshSize = new ByteSize((nuint)(cube.Count * sizeof(MeshVertex)));
         VkBuffer meshBuffer;
         VkDeviceMemory meshMemory;
@@ -2261,6 +2498,13 @@ internal static unsafe class Colossus
             hero.Extra.Y = seed;
             towers[k] = (variant, hero);
         }
+
+        // The city's life (City.cs): lights, bridges and cranes on the roofs, and lanes of traffic over them. Without the
+        // modelled towers there are no footprints to keep the traffic out of the box towers, so there is none.
+        var footprints = Footprints(towers.Select(p => (p.Instance, tops[p.Variant], towerVariants[p.Variant].Width)));
+        var jibs = Roofs(statics, footprints, out var bridges);
+        _lanes = towerVariants.Length > 0 ? Lanes(footprints, bridges) : [];
+        Console.WriteLine($"CITY {footprints.Count(f => f.Top > 40f)} roof lights, {bridges.Count} bridges, {jibs.Count / 3} cranes, {_lanes.Length} lanes of {_lanes.Sum(l => l.Count)} vehicles");
         foreach (var (c, size, color) in Solids())
         {
             Box(statics, c, size, 0f, color, 0f);
@@ -2309,7 +2553,7 @@ internal static unsafe class Colossus
         // RTX: one bottom-level structure for the cube and one per tower variant, built once; per frame in flight, a
         // top-level structure over every instance, rebuilt each frame as the swarm moves. The static instances are written
         // once; lamps are left out of the shadow rays.
-        var rt = rtx ? new RayScene(device, physical, queue, commands[0], meshBuffer, cubeCount, towerVariants, FramesInFlight, MaxInstances) : null;
+        var rt = rtx ? new RayScene(device, physical, queue, commands[0], meshBuffer, cubeCount, [.. towerVariants, (machine.First, machine.Count, 0f)], FramesInFlight, MaxInstances) : null;
         if (rt is not null)
         {
             for (var i = 0; i < FramesInFlight; i++)
@@ -2420,6 +2664,8 @@ internal static unsafe class Colossus
         string[] stepParts = ["steer", "update", "read"];
         var stepTimes = stepParts.Select(_ => new List<double>(1 << 16)).ToArray();
         double simTime = 0, last = clock.Elapsed.TotalSeconds, cycleStart = last, nextLog = last + 1, physicsMs = 0, frameMs = 0;
+        double cityLast = last;
+        float alarm = 0f, blackout = 0f;
         var lastLogFrame = 0;
         // With frame generation: the frames shown, the renderer's and the generated ones, and the last status reported.
         long shown = 0, lastLogShown = 0;
@@ -2430,7 +2676,7 @@ internal static unsafe class Colossus
         var reason = "window closed";
         var stale = false;
         var forceNight = args.Contains("--night");
-        var (bounces, bounceChanged, gpuSmooth, gpuBudget) = (3, 0.0, 0.0, (double)Arg(args, "--gpu-budget", 16));
+        var (bounces, bounceChanged, bounceDropped, gpuSmooth, gpuBudget) = (3, 0.0, -100.0, 0.0, (double)Arg(args, "--gpu-budget", 14));
         var vsyncNote = presentMode == VkPresentModeKHR.FifoKHR ? "vsync" : presentMode == VkPresentModeKHR.MailboxKHR ? "mailbox" : "no vsync";
 
         // The recording: each frame's image goes to ffmpeg as it is made, and OpenAL's mix of the same sixtieth of a
@@ -2596,6 +2842,13 @@ internal static unsafe class Colossus
                     buildYaw = -0.55f + (0.07f * (float)(c - 24.0));
                 }
             }
+
+            // While the swarm builds the kraken the city sounds its alarm, up in 1.5 s and down in 3, and blacks out from
+            // the face at 45 m a second; once the kraken is gone the lights come back from the edge at 60.
+            var cityDt = (float)Math.Clamp(now - cityLast, 0.0, 0.1);
+            cityLast = now;
+            alarm = Math.Clamp(alarm + ((building ? 1f / 1.5f : -1f / 3f) * cityDt), 0f, 1f);
+            blackout = Math.Clamp(blackout + ((building ? 45f : -60f) * cityDt), 0f, 330f);
 
             // Every fourth cycle, night falls as the face forms and holds through the Lego block; the sun comes back over
             // the next cloud. --night keeps it night.
@@ -2856,9 +3109,10 @@ internal static unsafe class Colossus
             // Camera: a preset, turned by the drag, zoomed by the wheel, drifting slowly, eased in; or the cinematic, its shots
             // cut hard, in time with the swarm's cycle.
             var fov = 55f;
+            var roll = 0f;
             if (preset == 3)
             {
-                (camEye, camTarget, fov) = Cinematic(now - cycleStart - 3.0);
+                (camEye, camTarget, fov, roll) = Cinematic(now - cycleStart - 3.0);
                 shownPreset = 3;
             }
             else
@@ -2891,7 +3145,11 @@ internal static unsafe class Colossus
             projection.M33 = 0f; // reversed, infinite depth: 1 at the near plane, 0 at infinity
             projection.M43 = Near;
             projection.M22 = -projection.M22; // Vulkan's clip space has y pointing down
-            var view = SN.Matrix4x4.CreateLookAt(camEye, camTarget, SN.Vector3.UnitY);
+            // The horizon leans by roll degrees: up turns about the line of sight.
+            var camForward = SN.Vector3.Normalize(camTarget - camEye);
+            var camSide = SN.Vector3.Normalize(SN.Vector3.Cross(camForward, SN.Vector3.UnitY));
+            var camUp = (SN.Vector3.Cross(camSide, camForward) * MathF.Cos(roll * MathF.PI / 180f)) + (camSide * MathF.Sin(roll * MathF.PI / 180f));
+            var view = SN.Matrix4x4.CreateLookAt(camEye, camTarget, camUp);
             var viewProj = view * projection;
             SN.Matrix4x4.Invert(viewProj, out var inverseViewProj);
             // A recording fades in from black and out to it, without grain so it compresses; the cinematic's black bands.
@@ -2903,6 +3161,8 @@ internal static unsafe class Colossus
                 // At night the sun sinks below the horizon, and the exposure opens a little for the city's lights.
                 Sun = new SN.Vector4(SN.Vector3.Normalize(SunDir - new SN.Vector3(0f, 0.34f * night, 0f)), exposure * fade * (1f + (0.6f * night))),
                 Params = new SN.Vector4(bloomStrength, rtx && rtxOn ? bounces : 0f, recording ? 1f : 0f, preset == 3 ? Letterbox : 0f),
+                // It rains once night has mostly fallen.
+                City = new SN.Vector4(alarm, blackout, Smooth(0.5f, 0.9f, night), 0f),
             };
             var skyPush = push with { Matrix = inverseViewProj };
             if (sound is not null)
@@ -2924,16 +3184,19 @@ internal static unsafe class Colossus
                     gpuTimes[1].Add((ticks[2] - ticks[1]) * tickMs);
                     gpuTimes[2].Add((ticks[3] - ticks[2]) * tickMs);
                     gpuTimes[3].Add((ticks[3] - ticks[0]) * tickMs);
-                    // --pt: the paths lose a bounce while the GPU is over its budget (16 ms, or --gpu-budget), and win it
-                    // back once well under it, at most one change a second. In 4K a bounce costs more than DLSS's
+                    // --pt: the paths lose a bounce while the GPU is over its budget (14 ms, or --gpu-budget), and win it
+                    // back once well under it, no sooner than 20 s after losing it, so that a scene just over the budget
+                    // does not flicker between two levels of light. In 4K a bounce costs more than DLSS's
                     // resolution saves: performance over quality took 2.25 ms off 19.88.
                     gpuSmooth += (((ticks[3] - ticks[0]) * tickMs) - gpuSmooth) * 0.05;
                     if (pt.Length > 0 && now - bounceChanged > 1.0)
                     {
-                        var next = gpuSmooth > gpuBudget && bounces > 1 ? bounces - 1 : gpuSmooth < gpuBudget * 0.65 && bounces < 3 ? bounces + 1 : bounces;
+                        var next = gpuSmooth > gpuBudget && bounces > 1 ? bounces - 1
+                            : gpuSmooth < gpuBudget * 0.65 && bounces < 3 && now - bounceDropped > 20.0 ? bounces + 1 : bounces;
                         if (next != bounces)
                         {
                             Console.WriteLine($"SWARM path bounces {bounces} > {next} at {now:F1} s, GPU {gpuSmooth:F1} ms");
+                            bounceDropped = next < bounces ? now : bounceDropped;
                             (bounces, bounceChanged) = (next, now);
                         }
                     }
@@ -3071,7 +3334,15 @@ internal static unsafe class Colossus
             var useRay = useDlss && rayOn;
             var target = useDlss ? thisFrame.AsSpan() : new Span<Drawn>((Drawn*)instanceMapped[slot], MaxInstances);
             staticInstances.AsSpan().CopyTo(target);
-            var drawn = staticInstances.Length + WriteSwarm(target[staticInstances.Length..], glow, mouth, hearing, ahead, frameDt, rt, slot, staticInstances.Length, build, shape, buildYaw);
+            foreach (var jib in jibs)
+            {
+                var k = towerInstances + jib.Index;
+                target[k].Model = jib.At((float)simTime);
+                rt?.Write(slot, k, target[k].Model, 0, target[k].Extra.X > 2.5f);
+            }
+
+            var drawn = staticInstances.Length + WriteSwarm(target[staticInstances.Length..], glow, mouth, hearing, ahead, frameDt, rt, slot, staticInstances.Length, build, shape, buildYaw, (float)simTime, machineMesh);
+            drawn += WriteTraffic(target[drawn..], (float)simTime, rt, slot, drawn, machineMesh);
             var forward = SN.Vector3.Normalize(camTarget - camEye);
             var dlssReset = !dlssWasOn || useRay != rayWasOn || drawn != lastDrawn || SN.Vector3.Distance(camEye, lastEye) > 4f || SN.Vector3.Dot(forward, lastForward) < 0.97f;
             if (useDlss)
@@ -3133,7 +3404,8 @@ internal static unsafe class Colossus
 
             cb.BindVertexBuffer(0, meshBuffer);
             cb.BindVertexBuffer(1, instanceBuffers[slot]);
-            cb.Draw(cubeCount, drawn - towerInstances, 0, towerInstances);
+            cb.Draw(cubeCount, staticInstances.Length - towerInstances, 0, towerInstances);
+            cb.Draw(machine.Count, drawn - staticInstances.Length, machine.First, staticInstances.Length);
             for (var v = 0; v < towerVariants.Length; v++)
             {
                 if (towerRanges[v].Count > 0)
@@ -3535,6 +3807,7 @@ internal static unsafe class Colossus
         _faceP = new SN.Vector3[n];
         _faceN = new SN.Vector3[n];
         _dirs = new SN.Vector3[n];
+        _bank = new float[n];
         _eye = new float[n];
         _mouth = new float[n];
         _jaw = new float[n];
@@ -3677,7 +3950,9 @@ internal static unsafe class Colossus
 
             var (min, max) = (p.Aggregate(SN.Vector3.Min), p.Aggregate(SN.Vector3.Max));
             var size = max - min;
-            var scale = MathF.Min(28f / MathF.Max(size.X, size.Z), 22f / size.Y);
+            // The kraken is giant: 40 m across its arms and 30 m high.
+            var (across, high) = name == "kraken" ? (40f, 30f) : (28f, 22f);
+            var scale = MathF.Min(across / MathF.Max(size.X, size.Z), high / size.Y);
             for (var i = 0; i < n; i++)
             {
                 p[i] = (p[i] - ((min + max) / 2f)) * scale;
@@ -3698,6 +3973,23 @@ internal static unsafe class Colossus
     }
 
     private static SN.Vector3 Abs(SN.Vector3 v) => SN.Vector3.Abs(v);
+
+    // The kraken's arms writhe: past its mantle, each point turns about the axis and rises and falls, by waves that run
+    // out along the arms, out of step from arm to arm, more toward the tips.
+    private static SN.Vector3 Writhe(SN.Vector3 p, float t)
+    {
+        var r = MathF.Sqrt((p.X * p.X) + (p.Z * p.Z));
+        var reach = Math.Clamp((r - 9f) / 8f, 0f, 1f);
+        if (reach <= 0f)
+        {
+            return p;
+        }
+
+        var wave = (t * 1.6f) - (r * 0.22f) + (MathF.Atan2(p.Z, p.X) * 3f);
+        var turn = 0.16f * reach * MathF.Sin(wave);
+        var (c, s) = (MathF.Cos(turn), MathF.Sin(turn));
+        return new SN.Vector3((p.X * c) - (p.Z * s), p.Y + (2.2f * reach * reach * MathF.Sin((wave * 0.8f) + 1.3f)), (p.X * s) + (p.Z * c));
+    }
 
     // Where a built point stands once its block has turned by yaw about its middle, at the face's centre.
     private static SN.Vector3 Built(SN.Vector3 p, float cos, float sin) => FaceCenter + new SN.Vector3((p.X * cos) + (p.Z * sin), p.Y, (p.Z * cos) - (p.X * sin));
@@ -3861,6 +4153,7 @@ internal static unsafe class Colossus
         var max = 28f * speedScale;
         var stir = assembled || shape >= 0 ? 0.25f : 2f;
         var (cos, sin) = (MathF.Cos(yaw), MathF.Sin(yaw));
+        var writhes = shape >= 0 && shape < Builds.Length && Builds[shape] == "kraken";
         ForBodies(_ids.Length, (start, end) =>
         {
             for (var i = start; i < end; i++)
@@ -3874,7 +4167,7 @@ internal static unsafe class Colossus
                 }
                 else if (shape >= 0)
                 {
-                    target = Built(_buildP[shape][i], cos, sin);
+                    target = Built(writhes ? Writhe(_buildP[shape][i], t) : _buildP[shape][i], cos, sin);
                 }
                 else
                 {
@@ -3916,7 +4209,9 @@ internal static unsafe class Colossus
     // with Jolt's worker and its jobs for the cores. One loop it stays.
     // Between two faces, build (0 to 1) tints each machine with the colour of the Lego box it settles on, lights it with
     // that box's glow, and lays it flat on the box: shape names the block, last built, and yaw its turn.
-    private static int WriteSwarm(Span<Drawn> o, float glow, float speech, float hearing, float ahead, float frameDt, RayScene? rt, int slot, int first, float build, int shape, float yaw)
+    // Each machine also lives on its own: in flight it banks into its turns and sways on its own clock, and its
+    // thrusters burn with its speed, which rides in the seed's whole part (0 to 15). mesh is the machine's for the rays.
+    private static int WriteSwarm(Span<Drawn> o, float glow, float speech, float hearing, float ahead, float frameDt, RayScene? rt, int slot, int first, float build, int shape, float yaw, float t, int mesh)
     {
         var (cos, sin) = (MathF.Cos(yaw), MathF.Sin(yaw));
         var built = build > 0.01f && shape >= 0 && shape < _buildP.Length;
@@ -3935,8 +4230,15 @@ internal static unsafe class Colossus
             var slope = MathF.Abs(normal.Y) > 0.95f ? SN.Vector3.UnitZ - (normal * normal.Z) : (normal * normal.Y) - SN.Vector3.UnitY;
             var want = v.LengthSquared() > 4f ? SN.Vector3.Normalize(v) : settled ? SN.Vector3.Normalize(slope) : _dirs[i];
             var d = SN.Vector3.Normalize(SN.Vector3.Lerp(_dirs[i], want, turn));
-            _dirs[i] = d;
             var up = settled && MathF.Abs(SN.Vector3.Dot(d, normal)) < 0.9f ? normal : MathF.Abs(d.Y) > 0.95f ? SN.Vector3.UnitX : SN.Vector3.UnitY;
+            // The bank: against the turn's rate about up, so up leans into the turn, plus a sway of its own; settled, none.
+            var yawRate = SN.Vector3.Dot(SN.Vector3.Cross(_dirs[i], d), up) / MathF.Max(frameDt, 1e-3f);
+            var bank = settled ? 0f : Math.Clamp(-0.6f * yawRate, -0.9f, 0.9f) + (0.18f * MathF.Sin((t * (0.7f + (0.08f * _phase[i]))) + (_phase[i] * 5f)));
+            _bank[i] += (bank - _bank[i]) * turn;
+            _dirs[i] = d;
+            var (bc, bs) = (MathF.Cos(_bank[i]), MathF.Sin(_bank[i]));
+            up = (up * bc) + (SN.Vector3.Cross(d, up) * bs) + (d * (SN.Vector3.Dot(d, up) * (1f - bc)));
+            var thrust = settled ? 0f : Math.Clamp((MathF.Sqrt(v.LengthSquared()) - 1f) / 10f, 0f, 1f);
             var emission = ((_eye[i] * 5f * (1f + (1.5f * hearing))) + (_mouth[i] * 2.5f * speech)) * glow;
             var color = SN.Vector3.Lerp(Metal, Amber, MathF.Min(1f, _eye[i] + (_mouth[i] * speech)) * glow);
             var tint = 0f;
@@ -3951,8 +4253,8 @@ internal static unsafe class Colossus
             }
 
             var model = (settled ? flat : scale) * SN.Matrix4x4.CreateWorld(p, d, up);
-            rt?.Write(slot, first + i, model, 0, false, swarm: true);
-            o[i] = new Drawn(model, new SN.Vector4(color, emission), new SN.Vector4(1f + (0.4f * tint), i * 0.618034f % 1f, 0f, 0f));
+            rt?.Write(slot, first + i, model, mesh, false, swarm: true);
+            o[i] = new Drawn(model, new SN.Vector4(color, emission), new SN.Vector4(1f + (0.4f * tint), (i * 0.618034f % 1f) + MathF.Floor(thrust * 15f), 0f, 0f));
         }
 
         return n;
@@ -4047,7 +4349,9 @@ internal static unsafe class Colossus
             if (variants.Length > 0)
             {
                 var v = rng.Next(variants.Length);
-                var s = 0.6f + (rng.NextSingle() * 0.45f);
+                // A denser, taller core round the face and lower outskirts, and a few supertall towers near it, so that
+                // the skyline rises toward the colossus.
+                var s = (0.6f + (rng.NextSingle() * 0.45f)) * (1.2f - (0.35f * (r - 60f) / 170f)) * (i % 53 == 7 && r < 120f ? 1.35f : 1f);
                 if (MathF.Abs(x) < 14f + (variants[v].Width * s) && z > 0f)
                 {
                     continue;
@@ -4181,6 +4485,64 @@ internal static unsafe class Colossus
             SN.Vector3 Corner(float su, float sv) => 0.5f * (n + (su * u) + (sv * v));
             o.AddRange([new(Corner(-1, -1), n), new(Corner(1, -1), n), new(Corner(1, 1), n), new(Corner(-1, -1), n), new(Corner(1, 1), n), new(Corner(-1, 1), n)]);
         }
+    }
+
+    // A machine in the unit cube, its nose toward -z (where CreateWorld points it): a hull with its corners cut, which
+    // swells behind the nose and narrows to the tail, an eye over the nose (material 3), a pod down each flank (2), and
+    // thrusters at the tail of the hull and of each pod (4). 116 flat-shaded triangles. Chunky on purpose: a machine is
+    // a few pixels across most of the time, and thin parts would shimmer as it moves.
+    private static (int First, int Count) Machine(List<MeshVertex> o)
+    {
+        var first = o.Count;
+        void Tri(SN.Vector3 a, SN.Vector3 b, SN.Vector3 c, SN.Vector3 outward, float material)
+        {
+            var n = SN.Vector3.Normalize(SN.Vector3.Cross(b - a, c - a));
+            if (SN.Vector3.Dot(n, outward) < 0f)
+            {
+                (b, c, n) = (c, b, -n);
+            }
+
+            o.AddRange([new(a, n, material), new(b, n, material), new(c, n, material)]);
+        }
+
+        // Eight points round an axis parallel to z through (x, y), w and h from it to the sides, the corners cut.
+        static SN.Vector3[] Ring(float z, float w, float h, float x, float y) =>
+            [.. new (float U, float V)[] { (1f, 0.45f), (0.45f, 1f), (-0.45f, 1f), (-1f, 0.45f), (-1f, -0.45f), (-0.45f, -1f), (0.45f, -1f), (1f, -0.45f) }
+                .Select(c => new SN.Vector3(x + (c.U * w), y + (c.V * h), z))];
+
+        // A loft through rings (z, half width, half height) round (x, y), capped: its tail (+z) a thruster, its front cap
+        // of material front.
+        void Loft((float Z, float W, float H)[] rings, float x, float y, float side, float front)
+        {
+            var points = rings.Select(r => Ring(r.Z, r.W, r.H, x, y)).ToArray();
+            for (var k = 0; k + 1 < points.Length; k++)
+            {
+                for (var j = 0; j < 8; j++)
+                {
+                    var (a, b, c, d) = (points[k][j], points[k][(j + 1) % 8], points[k + 1][(j + 1) % 8], points[k + 1][j]);
+                    var outward = new SN.Vector3(((a.X + c.X) / 2f) - x, ((a.Y + c.Y) / 2f) - y, 0f);
+                    Tri(a, b, c, outward, side);
+                    Tri(a, c, d, outward, side);
+                }
+            }
+
+            foreach (var (ring, material) in new[] { (points[0], 4f), (points[^1], front) })
+            {
+                var outward = new SN.Vector3(0f, 0f, ring[0].Z > 0f ? 1f : -1f);
+                for (var j = 1; j < 7; j++)
+                {
+                    Tri(ring[0], ring[j], ring[j + 1], outward, material);
+                }
+            }
+        }
+
+        Loft([(0.46f, 0.26f, 0.3f), (0.2f, 0.34f, 0.46f), (-0.18f, 0.3f, 0.42f), (-0.44f, 0.15f, 0.2f)], 0f, 0f, 0f, 3f);
+        foreach (var x in new[] { -0.4f, 0.4f })
+        {
+            Loft([(0.5f, 0.09f, 0.15f), (-0.12f, 0.06f, 0.1f)], x, -0.05f, 2f, 2f);
+        }
+
+        return (first, o.Count - first);
     }
 
     private static VkImageViewCreateInfo View(VkImage image, VkFormat format, VkImageAspectFlags aspect, int levels = 1) => new()

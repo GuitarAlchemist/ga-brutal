@@ -1,7 +1,8 @@
 # Extraction validation
 
-Validated on Windows with .NET SDK 10.0.113. Source: GA #840 at `76efbffd5af82b46c3146957a6bd4504008eeb89`, which builds on GA #839.
-Before validation: 10,169 MB available RAM.
+Validated on Windows with .NET SDK 10.0.113. Source: GA #840 at `9b0aac40549a5cebb155b64c2cc2d900f4345ea9`, which builds on GA #839.
+`VALIDATION.json` keeps the log hashes of the run at `76efbffd` (10,169 MB available RAM before it); the run at
+`9b0aac40` kept no logs, and CI repeats it on each pull request.
 
 | Project | Language | Locked restore | Serial build | Warnings | Errors |
 |---|---|---|---|---:|---:|
@@ -24,8 +25,8 @@ go run ./scripts/snapshot verify
 Tour retains two source warnings: CS8604 at Program.cs:149 and BRUTALCORE0011 at Program.cs:457.
 GA's warning/advisory suppression files were not inherited. Original locks remain byte-identical.
 
-The Lego tests run on the CPU and draw nothing. In Release, with the locked restore, all 20 pass and the locks stay
-unchanged. In Debug, 19 of 20 pass: "describing again and again keeps nothing" kept 6,362,584 bytes, because unoptimised
+The Lego tests run on the CPU and draw nothing. In Release, with the locked restore, all 21 pass and the locks stay
+unchanged. In Debug, 20 of 21 pass: "describing again and again keeps nothing" kept 6,362,560 bytes, because unoptimised
 code keeps locals alive. Run from outside the repository, `dotnet` ignored `global.json` and chose the host's newer SDK,
 11.0.100-preview.3; its restore rewrote the two Lego locks with FSharp.Core 11.0.100-preview3.26207.106. They were
 restored from the source blobs, and the checker passed again. CI runs every command above on `windows-latest` with

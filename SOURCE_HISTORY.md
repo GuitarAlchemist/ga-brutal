@@ -2,6 +2,17 @@
 
 Snapshot provenance; the original GA history and PRs remain intact.
 
+Synced to GA #840 at `9b0aac40` on 2026-10-22:
+
+- [9b0aac40549a5cebb155b64c2cc2d900f4345ea9](https://github.com/GuitarAlchemist/ga/commit/9b0aac40549a5cebb155b64c2cc2d900f4345ea9) Colossus city: alarm, blackout and searchlights for the kraken; offices that come and go; rain and lightning at night
+- [3e4668c96727aa4767c2941b9bd57d6c857a0531](https://github.com/GuitarAlchemist/ga/commit/3e4668c96727aa4767c2941b9bd57d6c857a0531) Colossus city: warning lights, cranes, skybridges, air traffic and a taller skyline
+- [9bf2633d53448f6ef42eaa8d127ed3557e604683](https://github.com/GuitarAlchemist/ga/commit/9bf2633d53448f6ef42eaa8d127ed3557e604683) Colossus: cooler cinematics, with orbits, dolly zooms, a leaning horizon and the kraken's own shots
+- [8c9d0d156ccdd0f369c1ee9f32fbd40011ab9f88](https://github.com/GuitarAlchemist/ga/commit/8c9d0d156ccdd0f369c1ee9f32fbd40011ab9f88) Colossus: the kraken of the legends, rising from the sea with a ship in its coils
+- [fc29a12e17d6934822b4dc709363029a9f4d8cd5](https://github.com/GuitarAlchemist/ga/commit/fc29a12e17d6934822b4dc709363029a9f4d8cd5) Colossus: each machine of the swarm is a small craft with a life of its own
+- [b40c283680bd77e96e0c1889543784d10c5d2f32](https://github.com/GuitarAlchemist/ga/commit/b40c283680bd77e96e0c1889543784d10c5d2f32) Colossus: the swarm builds a giant robotic kraken, and the curtain walls stop shimmering
+- [0892514f48e89863f6a7974cfe3339a5b381a0dd](https://github.com/GuitarAlchemist/ga/commit/0892514f48e89863f6a7974cfe3339a5b381a0dd) Colossus: a real night, with a moon
+- [901242d7443db05c73eed38b24e18cd2ca147406](https://github.com/GuitarAlchemist/ga/commit/901242d7443db05c73eed38b24e18cd2ca147406) Colossus: a dropped bounce is tried again only 20 s later
+
 Synced to GA #840 at `76efbffd` on 2026-10-21:
 
 - [76efbffd5af82b46c3146957a6bd4504008eeb89](https://github.com/GuitarAlchemist/ga/commit/76efbffd5af82b46c3146957a6bd4504008eeb89) Colossus: night every fourth cycle, a HUD-less tag for DLSS-G, fewer bounces in 4K

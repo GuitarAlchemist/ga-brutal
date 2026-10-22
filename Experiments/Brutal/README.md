@@ -1100,8 +1100,9 @@ HUD-less tag and adaptive quality).
 - **HUD-less colour.** With `--fg`, the panel and subtitles are drawn in a render pass of their own. Before them, the
   image is copied out and tagged as Streamline's HUD-less colour, so that the generated frames do not smear the text.
   A hidden run with the panel showed it drawn as before.
-- **Fewer bounces in 4K.** With `--pt`, the paths lose a bounce while the GPU's time goes over 16 ms
-  (`--gpu-budget`), down to one. They win it back below 65 % of that, at most once a second. DLSS's resolution was the
+- **Fewer bounces in 4K.** With `--pt`, the paths lose a bounce while the GPU's time goes over 14 ms (16 ms until the
+  cinematic's closer shots of 2026-10-22, when a frame often missed the vsync before the budget tripped)
+  (`--gpu-budget`), down to one. They win it back below 65 % of that, no sooner than 20 s after losing it: in the streamed window, at 1600 × 900, the GPU went over the budget at two bounces and under it at one, and the light flickered between them every few seconds. DLSS's resolution was the
   wrong lever: performance over quality took only 2.25 ms off 19.88. In 4K, hidden, 40 s, path traced with DLSS
   quality:
 
@@ -1120,6 +1121,121 @@ HUD-less tag and adaptive quality).
 - Night in 4K with frame generation.
 - The HUD-less tag's effect, which needs a visible, focused window with the panel or subtitles.
 - How one bounce looks next to three in 4K. The indirect light is darker with fewer bounces.
+**A real night** (2026-10-22, asked as « Une vraie nuit »: the night looked like a brown dusk).
+- **The sky.** Deep blue down to the horizon, which the city's lights warm only near the ground. The abyss below dims to
+  an ember instead of keeping its orange glow, so the haze between the towers turns blue-grey rather than brown.
+- **The moon.** A procedural disc, a little larger than the real one, with darker seas, high behind the face and to its
+  left (`MoonDir`), in a soft halo. It shows in the cinematic's upward shots beside the head.
+- **Moonlight.** The sun's light is gone by mid-dusk (night 0.55), and only then does the moon's rise, from its own
+  direction (`LightDir`), with its own shadow rays: the swarm and the towers' tops get cool rims, and the shadows never
+  jump. Path traced, the moon's disc is taken out of the escaping rays, as the sun's is, since the shadow rays count it.
+- **Stars.** Brighter, and thicker along a faint, uneven Milky Way, drawn from noise; no photograph is used.
+- **Measured.** Hidden, path traced, DLSS Quality, 116 s through one night, without captures, against the build before:
+  night (84 to 104 s) at 60 frames every second, 21 of 21, against 58.7 on average before; day at 59.8 against 56.1.
+  GPU 6.66 ms p50 and 11.57 ms p95, against 6.99 and 12.46.
+- **To verify:** the moon's disc in 4K, and night in a visible window with frame generation.
+
+**The kraken** (2026-10-22, asked as « je veux que la sequence "lego" soit comme un kraken robotique geant plutot »).
+The temples gave way to one block, `kraken@1` (`Lego/Kraken.fs`), which the swarm builds every cycle.
+- **The kraken of the legends** (asked next as « le kraken doit ressembler un peu plus au kraken des legendes »). The
+  first version, a domed mantle on a neck with eight evenly placed arms, read as a tower with cables in a static
+  render. It became a colossal cephalopod rising from a churning sea:
+  - its plated head is a bag, 17 m wide, that hangs back over the eyes as an octopus's does, with a ridge of fins down
+    its back;
+  - two great round eyes on its flanks, 50 degrees either side of the front, each a glowing lens in a dark rim with a
+    pupil that swells in its middle (a plain bar read as a road sign);
+  - eight arms, 3 m thick at the root and half a metre at the tip, with a rust collar every third segment and a lit
+    sucker every other one. The arms within 70 degrees of the front sprawl towards the viewer and curl their tips; the
+    others rise behind the head, higher than it, and curl theirs in a spiral, so that none hides the face;
+  - the arm nearest 340 degrees climbs to a three-masted ship and coils a turn and a half round its hull, holding it
+    13 m out and 15 m up;
+  - rings of wave crests capped with foam run out from it.
+
+  In its own units it is about 34 m across (the static render's mesa, less its 8 m margins) and 31 m high; the swarm
+  scales it to 30 m high, against 22 for the temples. The design is original; the ship-seizing sea monster is the
+  public-domain legend, not any one picture of it.
+- **It writhes.** The swarm's targets move, not the block: past 9 m from the axis, each point turns about it and rises
+  and falls on a wave that runs out along the arms (`Writhe`), stronger towards the tips. The head, within about 9 m,
+  stays still; the ship and the waves move with the arms.
+- **Eyes by area.** The swarm samples the block by area, so the details must be metres wide: the eyes are 4.8 m
+  rims round 3.8 m lenses.
+- **Moiré.** The curtain walls' mullions had hard edges a fraction of a pixel wide in the distance, which shimmered as
+  the camera moved; they are now antialiased by their screen width. The stars, smaller than a pixel, are now larger and
+  dimmer.
+- **Measured.** Hidden, path traced, DLSS Quality: 60 frames every second while the first kraken formed (32 to 41 s),
+  apart from the seconds with a capture; the legend's kraken, in a 41 s run, frame p50 16.64 ms and p95 22.68 ms. Lego
+  tests: 21 pass, including the kraken's (more than 100 lit boxes, arms reaching past 18 m, a sea, something held
+  above 20 m, and a valid six-armed variant).
+- **To verify:** the writhing and the moiré in a visible window, at 60 fps, from a recording.
+
+**Machines, not cubes** (2026-10-22, asked as « chaque machine devrait etre plus qu'un cube si possible et avoir sa vie
+propre »). Each machine of the swarm is now a small craft (`Machine`), built in code rather than in Blender, so that no
+asset has to ship: a hull with its corners cut, swelling behind the nose and narrowing to the tail, a pod down each
+flank, an eye over the nose and thrusters at the tails, in 116 flat-shaded triangles. It is drawn in its own draw call
+and has its own bottom-level structure for the rays. It is chunky on purpose: a machine is a few pixels across most of
+the time, and thin parts would shimmer.
+- **Its own life.** Its eye blinks on its own clock. Its thrusters burn with its speed, which rides in the seed's whole
+  part, and go dark once it settles. In flight it banks into its turns and sways a little, each on its own phase.
+- **Measured.** Hidden, path traced, DLSS Quality, 42 s: frame p50 16.65 ms, p95 18.29 ms; GPU 7.33 ms p50 and 9.93 ms
+  p95, against 6.40 and 10.10 with cubes in the kraken's run before.
+- **To verify:** whether the eyes' specks twinkle on the face at a distance, in a recording.
+
+**Cooler cinematics** (2026-10-22, asked as « et les cinematiques pourraient etre un peu plus cool »). A shot can now
+orbit what it looks at (`Arc`) instead of moving in a straight line, change its focal length as it moves (`FovEnd`),
+and lean the horizon (`Roll` to `RollEnd`). The focal length moves by the tangent of half the angle of view, so that a
+push in that widens is a true dolly zoom: the subject holds its size while the world behind it swells.
+- **Kept, and moved.** The orbit round the head is now an arc, banking like a drone; the push in on the eyes and the
+  push in face on are dolly zooms; the face from below leans.
+- **New, for the kraken** (it stands from 21 to 29 s and from 53 to 61 s of the 64 s loop): from the level of its sea
+  on a wide lens, looking up as it stands, the horizon leaning; an orbit round it past the ship in its coils; and one
+  of its eyes in a dolly zoom until the swarm lets go.
+- **Clear of the towers.** The check that keeps the camera out of the towers now follows each shot's real path,
+  arcs included; it moved four shots in toward what they look at.
+- **Measured.** Hidden, path traced, DLSS Quality, 72 s, the new shots with a 16 ms budget: GPU 10.70 ms p50 and
+  16.11 ms p95 (against 7.81 and 11.39 before them), and 44 of 52 seconds at 59 frames or more outside capture
+  seconds, the others at 54 to 58. Hence the 14 ms budget. A second hidden run with it had lower GPU times (8.62 and
+  13.05 ms) but worse frames, so something outside the scene held them (a desktop-automation process was running); its
+  frame counts are not used. The live view that followed held 47 of 49 seconds at 59 or more, with one spike to 26 ms
+  of GPU on a cut to the high shot.
+- **To verify:** the 14 ms budget over a whole loop in a quiet machine, and how often it costs a bounce.
+
+**A living city** (2026-10-22, asked as « fait moi tout ca », after seven ideas for the city). The first slice is in
+`City.cs`; like the towers, all of it is drawn only, and none of it exists without `towers.glb`.
+- **Skyline.** The towers stand taller toward the face (1.2 times near it, 0.85 at the edge), and one in 53 within
+  120 m of it is a supertall, a third taller again.
+- **Roofs.** Every roof over 40 m carries a red warning light that blinks on its own clock. Five roofs between 30 and
+  75 m carry a crane: a mast, and a jib with its counterweight and a lit tip, turning slowly one way or the other.
+- **Skybridges.** Up to 14 glass corridors, 4 m wide, walled as the box towers are, between towers 25 to 70 m apart
+  and far from the face. They are solid boxes, not cables: a thin line would shimmer.
+- **Air traffic.** Six lanes round the face, one way and the other by turns, a craft every 18 m. Each lane rises 7 m
+  over any roof and 10 m over any bridge in its way, smoothed so that it climbs before and comes down after. The craft
+  are the swarm's machines, longer, leaning into the curve, thrusters at cruise.
+- **Measured.** Hidden, path traced, DLSS Quality, 62 s: 281 roof lights, 11 bridges, 5 cranes and 281 craft; frame
+  p50 16.66 ms, p95 20.54 ms; GPU 7.45 ms p50 and 9.51 ms p95; 44 of 44 seconds outside captures at 59 frames or more.
+  The taller towers moved five shots out of their way.
+- **To verify:** the traffic's lanes against every tower, from above, in a recording.
+- **The city reacts to the kraken.** While the swarm builds it, the push constants carry a new `city` vector: the alarm,
+  up in 1.5 s and down in 3, and a blackout that spreads from the face at 45 m a second. The offices go out pane by pane
+  as it passes, and come back from the edge at 60 m a second once the kraken is gone. Every roof light flashes together,
+  twice a second. Four searchlights sweep the kraken's head from about 50 m out, on its flanks and behind it, clear of
+  the walkway where most shots stand. Their beams are analytic: the light scattered toward the eye where a view ray
+  passes closest to each beam's axis, and a pool where a beam lands. A first version blinded every shot near the face:
+  the beams started on the walkway, so the cameras stood inside them. They were moved, and the light seen along a beam
+  is now capped at three times the light seen across it.
+- **Offices come and go.** Each pane draws its light again every 25 to 85 s, on its own clock, and a few more are lit
+  at night.
+- **Rain at night.** Once night has mostly fallen it rains: whatever faces up turns darker and glossy, more so where
+  puddles gather, and faint streaks fall over the image in three layers. The rain's clouds hide most of the stars and
+  the moon. Lightning flashes every 9 s or so, a stroke and its return, lighting the smog from within, with a bolt in
+  the sky at its own bearing.
+- **Measured.** Hidden, path traced, DLSS Quality, `--night`: in 72 s with rain, GPU 8.14 ms p50 and 11.18 ms p95, and
+  52 of 52 seconds outside captures at 59 frames or more. In 46 s centred on the kraken, with the beams as narrowed
+  last, GPU 8.17 ms p50 and 10.62 ms p95, and 25 of 26 seconds at 59 or more, the other at 58; a run with the wider
+  beams before had 15.60 ms p95, enough for the budget to cost a bounce. One capture fell in a flash: the streaks then
+  covered the image, so a flash now brightens them a quarter as much.
+- **To verify:** a bolt in a capture (the flash captured had its bolt out of frame), the searchlights by day, and
+  whether the rain's streaks shimmer in a recording.
+
 **Marble and terracotta** (asked as « peut etre utilise le systeme de lego et Comfyui/blender »). ComfyUI and Blender
 made two more textures for the Lego blocks, the same way and with the same model as the others (`textures/`). They
 come from `generate_comfyui.py` (seeds 480 and 432) and `bake_blender.py`.
