@@ -2,8 +2,9 @@
 
 Snapshot provenance; the original GA history and PRs remain intact.
 
-Synced to GA #840 at `9b0aac40` on 2026-10-22:
+Synced to GA #840 at `644e25db` on 2026-10-22:
 
+- [644e25db913a53f43b1464677fd130fe79c75090](https://github.com/GuitarAlchemist/ga/commit/644e25db913a53f43b1464677fd130fe79c75090) Colossus: the ComfyUI clients in Go instead of Python
 - [9b0aac40549a5cebb155b64c2cc2d900f4345ea9](https://github.com/GuitarAlchemist/ga/commit/9b0aac40549a5cebb155b64c2cc2d900f4345ea9) Colossus city: alarm, blackout and searchlights for the kraken; offices that come and go; rain and lightning at night
 - [3e4668c96727aa4767c2941b9bd57d6c857a0531](https://github.com/GuitarAlchemist/ga/commit/3e4668c96727aa4767c2941b9bd57d6c857a0531) Colossus city: warning lights, cranes, skybridges, air traffic and a taller skyline
 - [9bf2633d53448f6ef42eaa8d127ed3557e604683](https://github.com/GuitarAlchemist/ga/commit/9bf2633d53448f6ef42eaa8d127ed3557e604683) Colossus: cooler cinematics, with orbits, dolly zooms, a leaning horizon and the kraken's own shots

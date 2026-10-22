@@ -37,6 +37,10 @@ jobs:
           if ($LASTEXITCODE) { throw 'go vet failed' }
           go test ./scripts/...
           if ($LASTEXITCODE) { throw 'the checker tests failed' }
+          go -C Experiments/Brutal/Colossus/comfyui vet .
+          if ($LASTEXITCODE) { throw 'go vet failed on the ComfyUI client' }
+          go -C Experiments/Brutal/Colossus/comfyui test .
+          if ($LASTEXITCODE) { throw 'the ComfyUI client tests failed' }
           go run ./scripts/snapshot verify
 
       # The F# locks pin the FSharp.Core that the SDK brings, so the SDK must be exactly the one they were made with.

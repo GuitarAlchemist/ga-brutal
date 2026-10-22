@@ -1,9 +1,9 @@
 {
   "source_repository": "https://github.com/GuitarAlchemist/ga",
   "source_pull_request": "https://github.com/GuitarAlchemist/ga/pull/840",
-  "source_commit": "9b0aac40549a5cebb155b64c2cc2d900f4345ea9",
+  "source_commit": "644e25db913a53f43b1464677fd130fe79c75090",
   "source_subtree": "Experiments/Brutal/",
-  "source_tree": "138d5eb3a1700bdb68c5c2c87f529c399597aef8",
+  "source_tree": "23af692aee4deb0ed3792eb84f6fdf420bc60e4a",
   "coordination_epic": "https://github.com/GuitarAlchemist/gaia/issues/257",
   "brutal_licence_revision": "a25cdf80b2a15530e7da6cff744def9d841ad3c3",
   "owner_session": "fe20417b-cfad-44ec-ac12-db95df2277a6",
@@ -91,21 +91,66 @@
       "reason": "Optional baked data, recordings or screenshots excluded from this source-only snapshot; retain upstream provenance."
     },
     {
+      "path": "Experiments/Brutal/Colossus/comfyui/client.go",
+      "git_blob": "8724a79ff1a09979f598b818fcdd7f6e1910251e",
+      "sha256": "28ba90594b65ffa310ffc9dffe9128a81035b54f60a6bf68f80cc8243459bbe2",
+      "bytes": 2603,
+      "included": true,
+      "extracted_sha256": "28ba90594b65ffa310ffc9dffe9128a81035b54f60a6bf68f80cc8243459bbe2",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/comfyui/comfyui_test.go",
+      "git_blob": "881b62fbeb0b6a9dc4bd2482ab46aa9cedf1d53e",
+      "sha256": "2ce4a90f0a3841740d71fd44725dd5c101549bf3b7b2875278429fd375d3acfc",
+      "bytes": 4077,
+      "included": true,
+      "extracted_sha256": "2ce4a90f0a3841740d71fd44725dd5c101549bf3b7b2875278429fd375d3acfc",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/comfyui/go.mod",
+      "git_blob": "e1dbd92be3af0bf8deb8460df94d92bcfae575a6",
+      "sha256": "c884ea626593712fb879d7dfb33c2ba8ca74c1caae3030e1ebc5cd8de77c1347",
+      "bytes": 82,
+      "included": true,
+      "extracted_sha256": "c884ea626593712fb879d7dfb33c2ba8ca74c1caae3030e1ebc5cd8de77c1347",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/comfyui/head.go",
+      "git_blob": "44edfba22da1df7711067b965a290b10493ac9f0",
+      "sha256": "82f14466380bd48cda1cee8970169a724e9e2ac4e558cddca84467fa844b29df",
+      "bytes": 4577,
+      "included": true,
+      "extracted_sha256": "82f14466380bd48cda1cee8970169a724e9e2ac4e558cddca84467fa844b29df",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/comfyui/main.go",
+      "git_blob": "d551101517c0561a1141c817d85dbab8a8bf1114",
+      "sha256": "3853e04ae6cb6dc901a2ad0d069c01f4d65b04710572be226a82acb55d6dc098",
+      "bytes": 2745,
+      "included": true,
+      "extracted_sha256": "3853e04ae6cb6dc901a2ad0d069c01f4d65b04710572be226a82acb55d6dc098",
+      "modified_for_extraction": false
+    },
+    {
+      "path": "Experiments/Brutal/Colossus/comfyui/textures.go",
+      "git_blob": "fb659bb89f626b4728e0dce4592cce23fbaa95a9",
+      "sha256": "5eb2e498c323a76a189e08f6f44db9db1bfa143ff0968da46cc6f06959c542c5",
+      "bytes": 3822,
+      "included": true,
+      "extracted_sha256": "5eb2e498c323a76a189e08f6f44db9db1bfa143ff0968da46cc6f06959c542c5",
+      "modified_for_extraction": false
+    },
+    {
       "path": "Experiments/Brutal/Colossus/head/bake_blender.py",
       "git_blob": "b3a79f77108108447deaa72dc4aa99041a93d01a",
       "sha256": "87bdf02e8cd6d48efe9503f9207fb42a7f02edd2c61c9d9453d149afa93340db",
       "bytes": 6067,
       "included": true,
       "extracted_sha256": "87bdf02e8cd6d48efe9503f9207fb42a7f02edd2c61c9d9453d149afa93340db",
-      "modified_for_extraction": false
-    },
-    {
-      "path": "Experiments/Brutal/Colossus/head/generate_comfyui.py",
-      "git_blob": "07bdab20603c2563044fcba4ce7677e591a41668",
-      "sha256": "3600f361ed83b9943f4d7562fdf80d5c50114d584a7d03b6aea8f29f8432877f",
-      "bytes": 4912,
-      "included": true,
-      "extracted_sha256": "3600f361ed83b9943f4d7562fdf80d5c50114d584a7d03b6aea8f29f8432877f",
       "modified_for_extraction": false
     },
     {
@@ -186,15 +231,6 @@
       "bytes": 665344,
       "included": true,
       "extracted_sha256": "ac660eada79b9827532babe4ea50372afe3d7d2082c1d4210dcc6a05bbc1171e",
-      "modified_for_extraction": false
-    },
-    {
-      "path": "Experiments/Brutal/Colossus/textures/generate_comfyui.py",
-      "git_blob": "dede42ef4c7e6179b8c4c170a3439f51181d0959",
-      "sha256": "49205e0df909592bea82e733595b44b77b6ffb8330d92a585ba2f961483972f4",
-      "bytes": 3554,
-      "included": true,
-      "extracted_sha256": "49205e0df909592bea82e733595b44b77b6ffb8330d92a585ba2f961483972f4",
       "modified_for_extraction": false
     },
     {
@@ -585,11 +621,11 @@
     },
     {
       "path": "Experiments/Brutal/README.md",
-      "git_blob": "4898d2e7a8f5c47e15fbf38a50ae467a5cabeb49",
-      "sha256": "7cacb2c20a10e77d35cadb1154ecac6cd54392ef3ca2e08bba6f624d9062ef49",
-      "bytes": 91694,
+      "git_blob": "b4b308ba8aaf44469734e5c28f1540a6b33da326",
+      "sha256": "c7c0b7f8bdce05e92e23ab6a3bdac76716437b3215c7d8bd4184e4d616dbbb43",
+      "bytes": 92963,
       "included": true,
-      "extracted_sha256": "c9a786569ec8dc4c3d092dcabeca510b665e2fb844eabb53b47e3f88a71701cd",
+      "extracted_sha256": "90bad8416e30305e35353cadf25751b7c2ad413b5c6baa452b6bfc27fb833e2e",
       "modified_for_extraction": true
     },
     {
@@ -885,5 +921,5 @@
     "Colossus/Program.cs, Streamline.cs and Brutal/README.md: Streamline's folder only from an explicit --sl-path; no source-machine default."
   ],
   "source_pull_request_base": "https://github.com/GuitarAlchemist/ga/pull/839",
-  "previous_source_commit": "76efbffd5af82b46c3146957a6bd4504008eeb89"
+  "previous_source_commit": "9b0aac40549a5cebb155b64c2cc2d900f4345ea9"
 }

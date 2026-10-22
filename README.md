@@ -56,8 +56,8 @@ asset set, not fresh results for this repository. Consult `VALIDATION.md` for th
 - FFmpeg, Piper, Blender, ComfyUI and their models/workflows remain external, optional operator tools.
   No download or licence-acceptance step is automated. Segoe UI is read from the installed Windows fonts,
   if present; no font is bundled.
-- `Colossus/textures/generate_comfyui.py` expects the external workflow
-  `C:\tmp\learn-visuals\code\comfyui\workflows\09-seamless.api.json`.
+- `Colossus/comfyui` (Go) makes the textures from an external workflow, learn-visuals' `09-seamless.api.json`, given
+  with `-workflow`; no machine path is assumed.
   That workflow was not audited/copied; generation is **not self-contained**. Existing twelve texture bytes
   and their documented seeds/model provenance are preserved; no generator was executed.
 - The optional head-generation source documents TRELLIS.2 and DINOv3: **Built with DINOv3**.

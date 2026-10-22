@@ -1,8 +1,8 @@
 # Extraction validation
 
-Validated on Windows with .NET SDK 10.0.113. Source: GA #840 at `9b0aac40549a5cebb155b64c2cc2d900f4345ea9`, which builds on GA #839.
-`VALIDATION.json` keeps the log hashes of the run at `76efbffd` (10,169 MB available RAM before it); the run at
-`9b0aac40` kept no logs, and CI repeats it on each pull request.
+Validated on Windows with .NET SDK 10.0.113. Source: GA #840 at `644e25db913a53f43b1464677fd130fe79c75090`, which builds on GA #839.
+`VALIDATION.json` keeps the log hashes of the run at `76efbffd` (10,169 MB available RAM before it); the runs since
+kept no logs, and CI repeats them on each pull request.
 
 | Project | Language | Locked restore | Serial build | Warnings | Errors |
 |---|---|---|---|---:|---:|
@@ -20,6 +20,7 @@ dotnet restore <project> --locked-mode --disable-parallel -v:minimal
 dotnet build <project> --no-restore -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false -v:minimal
 dotnet run -c Release --project Experiments/Brutal/Lego.Cli -p:RestoreLockedMode=true -- test
 go run ./scripts/snapshot verify
+go -C Experiments/Brutal/Colossus/comfyui test .
 ```
 
 Tour retains two source warnings: CS8604 at Program.cs:149 and BRUTALCORE0011 at Program.cs:457.
