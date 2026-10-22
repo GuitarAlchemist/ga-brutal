@@ -29,14 +29,14 @@ Each project has exact direct package pins and a NuGet lock. No project referenc
 files intentionally exclude GA's warning/advisory suppressions, version overrides and blue/green slots.
 The locks retain `Microsoft.Extensions.ObjectPool` 11.0.0-preview.5.26302.115 where selected upstream;
 this is not represented as a stable .NET 10-only dependency graph.
-The F# locks pin the FSharp.Core the SDK brings (10.0.113 with SDK 10.0.113). A Release restore on that SDK
-resolves 11.0.100-preview3.26207.106 instead and rewrites the Lego locks, so validation runs the Lego tests in Debug.
+The F# locks pin the FSharp.Core that the SDK brings: 10.0.113, with SDK 10.0.113. Run `dotnet` from the repository
+root, so that `global.json` chooses the SDK. Run from elsewhere, a newer SDK brings its own FSharp.Core, and restore rewrites
+the Lego locks. CI (`.github/workflows/ci.yml`) installs exactly 10.0.113 and runs the checks below on each pull request.
 
 ```powershell
 dotnet restore Experiments/Brutal/Colossus/Colossus.csproj --locked-mode --disable-parallel
 dotnet build Experiments/Brutal/Colossus/Colossus.csproj --no-restore -m:1
-dotnet restore Experiments/Brutal/Lego.Cli/Lego.Cli.fsproj --locked-mode --disable-parallel
-dotnet run --no-restore --project Experiments/Brutal/Lego.Cli -- test   # the Lego logic, no engine; see VALIDATION.md
+dotnet run -c Release --project Experiments/Brutal/Lego.Cli -p:RestoreLockedMode=true -- test   # the Lego logic, no engine
 # Optional Windows runtime, only when GPU/memory/streaming capacity permits:
 dotnet run --no-build --project Experiments/Brutal/Colossus -- --no-tts --no-voice --no-sound --no-rtx --swarm 1000
 ```

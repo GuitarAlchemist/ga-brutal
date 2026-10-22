@@ -65,8 +65,9 @@
     "available_mb": 10169
   },
   "lego_tests": {
-    "command": "dotnet run --no-restore --project Experiments/Brutal/Lego.Cli -- test",
+    "command": "dotnet run -c Release --project Experiments/Brutal/Lego.Cli -p:RestoreLockedMode=true -- test",
+    "release": "20 passed, 0 failed, from the repository root with SDK 10.0.113; locks unchanged",
     "debug": "19 passed, 1 failed: \"describing again and again keeps nothing\" kept 6,362,584 bytes; unoptimised code keeps locals alive",
-    "release": "20 passed, 0 failed, but a Release restore rewrites the Lego locks (FSharp.Core 11.0.100-preview3.26207.106); they were restored from the source blobs afterwards"
+    "sdk_note": "Run outside the repository, dotnet chose SDK 11.0.100-preview.3, whose restore rewrote the Lego locks (FSharp.Core 11.0.100-preview3.26207.106); they were restored from the source blobs"
   }
 }

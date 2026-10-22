@@ -1,0 +1,75 @@
+# The checks of VALIDATION.md, on every pull request and on main: the snapshot against PROVENANCE.json, a locked
+# restore and a serial build of each project, the Lego tests, and the locks left as they were. Nothing runs a window,
+# a GPU or a sound device.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  snapshot:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      - name: Snapshot matches PROVENANCE.json
+        run: python -I scripts/verify_snapshot.py
+
+      # The F# locks pin the FSharp.Core that the SDK brings, so the SDK must be exactly the one they were made with.
+      # A private install directory keeps the runner's other SDKs out of global.json's roll-forward.
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        env:
+          DOTNET_INSTALL_DIR: ${{ runner.temp }}\dotnet
+        with:
+          dotnet-version: 10.0.113
+          cache: true
+          cache-dependency-path: Experiments/Brutal/*/packages.lock.json
+
+      - name: Only SDK 10.0.113
+        run: |
+          dotnet --list-sdks
+          if ((dotnet --version) -ne '10.0.113') { throw "SDK $(dotnet --version), expected 10.0.113" }
+
+      - name: Locked restore and serial build, one project at a time
+        run: |
+          $projects = @(
+            'Experiments/Brutal/HelloBrutal/HelloBrutal.csproj',
+            'Experiments/Brutal/HallSlice/HallSlice.csproj',
+            'Experiments/Brutal/Colossus/Colossus.csproj',
+            'Experiments/Brutal/Tour/Tour.csproj',
+            'Experiments/Brutal/Lego/Lego.fsproj',
+            'Experiments/Brutal/Lego.Cli/Lego.Cli.fsproj'
+          )
+          foreach ($p in $projects) {
+            dotnet restore $p --locked-mode --disable-parallel -v:minimal
+            if ($LASTEXITCODE) { throw "restore failed: $p" }
+            dotnet build $p --no-restore -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false -v:minimal
+            if ($LASTEXITCODE) { throw "build failed: $p" }
+          }
+
+      # In Release: a Debug build keeps locals alive, and the memory-retention test then fails by design.
+      - name: Lego tests
+        run: dotnet run -c Release --project Experiments/Brutal/Lego.Cli -p:RestoreLockedMode=true -- test
+
+      - name: Locks and sources unchanged
+        run: |
+          git status --porcelain
+          if (git status --porcelain) { throw 'the build changed tracked or unignored files' }
+          python -I scripts/verify_snapshot.py
