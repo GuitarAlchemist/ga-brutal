@@ -50,6 +50,11 @@ var edits = map[string][]edit{
 			new: `<None Include="city\towers.glb" Condition="Exists('city\towers.glb')" CopyToOutputDirectory="PreserveNewest" />`},
 	},
 	"Experiments/Brutal/Colossus/Program.cs": {
+		{old: `        // Every instance shares one buffer: the swarm gets what the statics leave.
+        var swarmRoom = Math.Min(MaxSwarm, MaxInstances - staticInstances.Length);`,
+			new: `        // Every instance shares one buffer: reserve the city traffic before sizing the swarm.
+        var trafficInstances = _lanes.Sum(lane => lane.Count);
+        var swarmRoom = Math.Max(0, Math.Min(MaxSwarm, MaxInstances - staticInstances.Length - trafficInstances));`},
 		{old: `// --no-voice (don't mirror the voice plugins), --face-file PATH`,
 			new: `// --voice-mirror (opt in to machine-local voice plugins), --no-voice (disable mirroring), --face-file PATH`},
 		{old: `bool mirrorOn = !args.Contains("--no-voice") && !recording,`,
@@ -106,6 +111,18 @@ func (e edit) apply(text, path string) (string, error) {
 // git blobs, never a working tree; keeps source, licences and texture PNGs; leaves out what excluded names; and applies
 // the extraction's edits. It writes the files and PROVENANCE.json.
 func syncSnapshot(ga, commit, root string) (string, error) {
+	// Cooperating sync writers serialize through an exclusive directory. A crash
+	// leaves it behind deliberately: inspect/recover before removing a stale lock.
+	lock := filepath.Join(root, ".snapshot-sync.lock")
+	if err := os.Mkdir(lock, 0o700); err != nil {
+		return "", fmt.Errorf("cannot acquire snapshot sync lock %s: %w", lock, err)
+	}
+	keepLock := false
+	defer func() {
+		if !keepLock {
+			_ = os.Remove(lock)
+		}
+	}()
 	git := func(args ...string) ([]byte, error) {
 		cmd := exec.Command("git", append([]string{"-C", ga}, args...)...)
 		var stderr bytes.Buffer
@@ -116,6 +133,13 @@ func syncSnapshot(ga, commit, root string) (string, error) {
 		}
 		return out, nil
 	}
+	// Resolve a movable ref once. Every blob/listing/provenance read uses this
+	// immutable commit, even if the upstream branch advances during the sync.
+	resolved, err := git("rev-parse", "--verify", "--end-of-options", commit+"^{commit}")
+	if err != nil {
+		return "", err
+	}
+	commit = strings.TrimSpace(string(resolved))
 	old, err := loadProvenance(root)
 	if err != nil {
 		return "", err
@@ -129,6 +153,7 @@ func syncSnapshot(ga, commit, root string) (string, error) {
 		return "", err
 	}
 	var rows []fileRow
+	var output []snapshotOutput
 	seen := map[string]bool{}
 	edited := 0
 	for _, entry := range strings.Split(strings.TrimSuffix(string(listing), "\x00"), "\x00") {
@@ -150,9 +175,7 @@ func syncSnapshot(ga, commit, root string) (string, error) {
 			if _, known := oldRows[path]; !known && exists(target) {
 				return "", fmt.Errorf("%s is in the tree but was never part of the snapshot", path)
 			}
-			if err := removeIfPresent(target); err != nil {
-				return "", err
-			}
+			output = append(output, snapshotOutput{path: target, remove: true})
 			row.Reason = excludedReason
 			rows = append(rows, row)
 			continue
@@ -176,12 +199,7 @@ func syncSnapshot(ga, commit, root string) (string, error) {
 			}
 			out, modified = []byte(text), true
 		}
-		if err := os.MkdirAll(filepath.Dir(target), 0o755); err != nil {
-			return "", err
-		}
-		if err := os.WriteFile(target, out, 0o644); err != nil {
-			return "", err
-		}
+		output = append(output, snapshotOutput{path: target, data: out})
 		if modified {
 			edited++
 		}
@@ -195,9 +213,7 @@ func syncSnapshot(ga, commit, root string) (string, error) {
 	for _, row := range old.Files {
 		if !seen[row.Path] {
 			gone = append(gone, row.Path)
-			if err := removeIfPresent(filepath.Join(root, filepath.FromSlash(row.Path))); err != nil {
-				return "", err
-			}
+			output = append(output, snapshotOutput{path: filepath.Join(root, filepath.FromSlash(row.Path)), remove: true})
 		}
 	}
 
@@ -222,8 +238,10 @@ func syncSnapshot(ga, commit, root string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if err := os.WriteFile(filepath.Join(root, "PROVENANCE.json"), data, 0o644); err != nil {
-		return "", err
+	output = append(output, snapshotOutput{path: filepath.Join(root, "PROVENANCE.json"), data: data})
+	if err := publishSnapshot(root, output); err != nil {
+		keepLock = true
+		return "", fmt.Errorf("%w; publication failed, inspect recovery state before removing %s", err, lock)
 	}
 	included := 0
 	for _, row := range rows {

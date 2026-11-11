@@ -43,7 +43,7 @@
       "sha256": "a9c55e15a471905a2722227b7ad628215c81de8e8f303bf664afd8ce0b9734a8",
       "bytes": 284119,
       "included": true,
-      "extracted_sha256": "d50cfc67fac9ef5cad231bbc909688ac4c475415b1259d5e2ed1c286751f3970",
+      "extracted_sha256": "b25bfb32142785f5b7b96daea30c992fac24880ff69338fa669c91e6c008ce41",
       "modified_for_extraction": true
     },
     {
@@ -918,7 +918,8 @@
     "Colossus/Speech.cs: require explicit Piper engine and model; no source-machine SIWIS auto-selection.",
     "Colossus/Program.cs: voice-state mirror opt-in via --voice-mirror.",
     "Colossus/Colossus.csproj: optional baked assets copied only when present; procedural runtime fallbacks retained.",
-    "Colossus/Program.cs, Streamline.cs and Brutal/README.md: Streamline's folder only from an explicit --sl-path; no source-machine default."
+    "Colossus/Program.cs, Streamline.cs and Brutal/README.md: Streamline's folder only from an explicit --sl-path; no source-machine default.",
+    "Reserve city traffic instances before clamping the Colossus swarm; preserve this PR #2 correction as an exact-match extraction edit."
   ],
   "source_pull_request_base": "https://github.com/GuitarAlchemist/ga/pull/839",
   "previous_source_commit": "9b0aac40549a5cebb155b64c2cc2d900f4345ea9"

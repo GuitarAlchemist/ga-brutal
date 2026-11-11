@@ -58,6 +58,11 @@ jobs:
           dotnet --list-sdks
           if ((dotnet --version) -ne '10.0.113') { throw "SDK $(dotnet --version), expected 10.0.113" }
 
+      - name: City traffic instance capacity (no engine)
+        env:
+          SNAPSHOT_DOTNET_TESTS: '1'
+        run: go test ./scripts/snapshot -run TestTrafficCapacity -count=1
+
       - name: Locked restore and serial build, one project at a time
         run: |
           $projects = @(

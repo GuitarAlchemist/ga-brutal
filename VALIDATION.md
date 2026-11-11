@@ -44,3 +44,29 @@ No GPU/window/audio/streaming test was run. No new renderer or stream process wa
 Existing screenshots/reports are historical upstream evidence, not new validation results.
 Local build/restore logs and generated bin/obj are ignored; VALIDATION.json retains each log's SHA-256.
 No binary release, official logo startup or complete native-distribution compliance is claimed.
+## PR #2 review corrections
+
+- Snapshot sync first reads and validates every Git blob and extraction edit and
+  encodes provenance. It stages all output bytes before replacing files. Reported
+  publication failures roll already-applied replacements/deletions back; failed
+  rollback retains recovery files and reports their location. Cooperating sync writers are serialized with an exclusive lock directory;
+  stale/crash locks require inspection and manual recovery. The source ref is
+  resolved to one immutable SHA before any source read. This is not a crash-safe
+  transaction or a concurrent-reader atomic snapshot; external writers must stay
+  away from the snapshot during sync.
+- A late extraction-pattern failure is covered by a negative regression: the
+  old sync overwrote City.cs before failing; the corrected sync preserves both
+  source bytes and provenance. Publication success and rollback of overwrites,
+  deletions and newly created files have separate tests.
+- The Colossus instance budget reserves lane vehicles before clamping the swarm.
+  This additional extraction edit is exact-match guarded and recorded in
+  PROVENANCE.json; upstream hashes remain unchanged. The regression compiles the
+  actual production budget statements in a minimal .NET program, without an
+  engine/window, and covers empty, no-traffic, crowded and zero-swarm boundaries.
+  CI runs it after selecting SDK 10.0.113.
+- Linux local validation with Go 1.27.0 and SDK 10.0.113: Go tests/vet, snapshot
+  verification, ComfyUI client tests and the four C# budget cases pass. The old
+  budget fails the crowded case (39024 rather than 38743 swarm instances).
+- Full locked Colossus restore/build still requires fresh Windows CI validation;
+  the Linux attempt reported an FSharp.Core 10.0.113 package hash mismatch. No
+  package lock or integrity requirement was changed to bypass it.

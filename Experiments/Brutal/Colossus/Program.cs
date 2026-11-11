@@ -2576,8 +2576,9 @@ internal static unsafe partial class Colossus
             }
         }
 
-        // Every instance shares one buffer: the swarm gets what the statics leave.
-        var swarmRoom = Math.Min(MaxSwarm, MaxInstances - staticInstances.Length);
+        // Every instance shares one buffer: reserve the city traffic before sizing the swarm.
+        var trafficInstances = _lanes.Sum(lane => lane.Count);
+        var swarmRoom = Math.Max(0, Math.Min(MaxSwarm, MaxInstances - staticInstances.Length - trafficInstances));
         if (swarm > swarmRoom)
         {
             Console.WriteLine($"SWARM {swarm} bodies do not fit beside {staticInstances.Length} static instances: {swarmRoom}");
